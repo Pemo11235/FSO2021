@@ -32,7 +32,6 @@ const Line = ({elem}) => {
     return <p>{elem.text} {elem.value}</p>
 }
 
-
 const App = () => {
     // save clicks of each button to its own state
     const [good, setGood] = useState(0)
@@ -85,6 +84,7 @@ const App = () => {
         setAverage(average - 1)
     }
 
+
     return (
         <div>
             <Header text={'Give feedback'}/>
@@ -92,8 +92,14 @@ const App = () => {
             <Button handleClick={handleNeutral} text={'Neutral'}/>
             <Button handleClick={handleBad} text={'Bad'}/>
             <Header text={'Statistics'}/>
-            <ShowValues values={values}/>
-            <Statistics stats={stats}/>
+            {all !== 0 && (
+                <>
+                    <ShowValues values={values}/>
+                    <Statistics stats={stats}/>
+                </>)}
+            {all === 0 && (
+                <p>No feedback given !</p>
+            )}
         </div>
     )
 }
