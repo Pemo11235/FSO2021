@@ -10,18 +10,23 @@ const Button = ({handleClick, text}) => {
 
 const Statistics = ({stats}) => {
     return (
-        <>
+        <table>
+            <tbody>
             <Statistic stat={stats.good}/>
             <Statistic stat={stats.neutral}/>
             <Statistic stat={stats.bad}/>
             <Statistic stat={stats.all}/>
             <Statistic stat={stats.average}/>
             <Statistic stat={stats.positive}/>
-        </>
+            </tbody>
+        </table>
     )
 }
 const Statistic = ({stat}) => {
-    return <p>{stat.text} {stat.value}</p>
+    return (<tr>
+        <td>{stat.text} </td>
+        <td>{stat.value} </td>
+    </tr>)
 }
 
 const App = () => {
@@ -81,8 +86,8 @@ const App = () => {
             <Button handleClick={handleNeutral} text={'Neutral'}/>
             <Button handleClick={handleBad} text={'Bad'}/>
             <Header text={'Statistics'}/>
-            {all !== 0 && ( <Statistics stats={stats}/>)}
-            {all === 0 && ( <p>No feedback given !</p>)}
+            {all !== 0 && (<Statistics stats={stats}/>)}
+            {all === 0 && (<p>No feedback given !</p>)}
         </div>
     )
 }
