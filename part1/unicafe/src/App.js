@@ -8,28 +8,20 @@ const Button = ({handleClick, text}) => {
     return <button title={text} onClick={handleClick}>{text} </button>
 }
 
-const ShowValues = ({values}) => {
-    return (
-        <>
-            <Line elem={values.good}/>
-            <Line elem={values.neutral}/>
-            <Line elem={values.bad}/>
-
-        </>
-    )
-}
-
 const Statistics = ({stats}) => {
     return (
         <>
-            <Line elem={stats.all}/>
-            <Line elem={stats.average}/>
-            <Line elem={stats.positive}/>
+            <Statistic stat={stats.good}/>
+            <Statistic stat={stats.neutral}/>
+            <Statistic stat={stats.bad}/>
+            <Statistic stat={stats.all}/>
+            <Statistic stat={stats.average}/>
+            <Statistic stat={stats.positive}/>
         </>
     )
 }
-const Line = ({elem}) => {
-    return <p>{elem.text} {elem.value}</p>
+const Statistic = ({stat}) => {
+    return <p>{stat.text} {stat.value}</p>
 }
 
 const App = () => {
@@ -39,7 +31,7 @@ const App = () => {
     const [bad, setBad] = useState(0)
     const [all, setAll] = useState(0);
     const [average, setAverage] = useState(0);
-    const values = {
+    const stats = {
         good: {
             text: 'Good',
             value: good,
@@ -52,9 +44,6 @@ const App = () => {
             text: 'Bad',
             value: bad,
         },
-    };
-
-    const stats = {
         all: {
             text: 'All',
             value: all,
@@ -92,14 +81,8 @@ const App = () => {
             <Button handleClick={handleNeutral} text={'Neutral'}/>
             <Button handleClick={handleBad} text={'Bad'}/>
             <Header text={'Statistics'}/>
-            {all !== 0 && (
-                <>
-                    <ShowValues values={values}/>
-                    <Statistics stats={stats}/>
-                </>)}
-            {all === 0 && (
-                <p>No feedback given !</p>
-            )}
+            {all !== 0 && ( <Statistics stats={stats}/>)}
+            {all === 0 && ( <p>No feedback given !</p>)}
         </div>
     )
 }
