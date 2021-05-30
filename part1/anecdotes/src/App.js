@@ -4,7 +4,25 @@ function getRandomInt(max) {
     return Math.floor(Math.random() * max);
 }
 
-const Button = ({handleClick,text}) => {
+function getMax(votes) {
+    let max = 0;
+    let index = 0;
+
+    for (let i = 0; i < 6; i++) {
+
+        if (votes[i] > max) {
+            max = votes[i];
+            index = i;
+        }
+    }
+    console.log(index)
+    return index
+}
+
+const Header = ({text}) => {
+    return < h1>{text}</h1>
+}
+const Button = ({handleClick, text}) => {
     return (<div>
         <button onClick={handleClick}>{text}</button>
     </div>)
@@ -18,7 +36,7 @@ const App = () => {
         'Premature optimization is the root of all evil.',
         'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'
     ]
-    const points = {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0}
+    const points = {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0}
 
     const handleNext = () => {
         setSelected(getRandomInt(6))
@@ -26,20 +44,23 @@ const App = () => {
 
     const handleVote = () => {
         const copyPoints = {...votes}
-        copyPoints[selected]+= 1;
+        copyPoints[selected] += 1;
         setVotes(copyPoints);
     }
 
     const [selected, setSelected] = useState(0)
 
     const [votes, setVotes] = useState(points);
- console.log(votes)
+
     return (
         <div>
+            <Header text={'Anecdote of the day'}/>
             {anecdotes[selected]}
             <p>has {votes[selected]} votes.</p>
             <Button handleClick={handleVote} text={'Vote'}/>
             <Button handleClick={handleNext} text={'Next anecdote'}/>
+            <Header text={'Anecdote with most votes'}/>
+            <p>{anecdotes[getMax(votes)]}. Has {votes[getMax(votes)]} votes</p>
         </div>
     )
 }
