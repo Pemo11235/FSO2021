@@ -12,23 +12,23 @@ const Part = ({part, exercise}) => {
 const Content = ({parts}) => {
     return (
         <div>
-            {parts.map(part => <Part key= {part.name} part={part.name} exercise={part.exercises}/>)}
+            {parts.map(part => <Part key={part.name} part={part.name} exercise={part.exercises}/>)}
         </div>
     )
 }
 
 const Course = ({course}) => {
-    return(
+    return (
         <div>
             <Header course={course.name}/>
             <Content parts={course.parts}/>
-            {/*<Total exercises={course.parts.map(part => part.exercises)}/>*/}
+            <Total exercises={course.parts.map(part => part.exercises)}/>
         </div>
     )
 }
 
 const Total = ({exercises}) => {
-    return <p>Number of exercises {exercises[0] + exercises[1] + exercises[2]}</p>
+    return <p><b>Number of exercises {exercises.reduce( (acc,curr) => acc += curr)}</b></p>
 }
 const App = () => {
     const course = {
@@ -49,10 +49,15 @@ const App = () => {
                 name: 'State of a component',
                 exercises: 14,
                 id: 3
-            }
+            },
+            {
+                name: 'Redux',
+                exercises: 11,
+                id: 4,
+            },
         ]
     }
-    return <Course course={course} />
+    return <Course course={course}/>
 }
 
 export default App
