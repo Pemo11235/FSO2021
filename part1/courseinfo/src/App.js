@@ -28,7 +28,10 @@ const Course = ({course}) => {
 }
 
 const Total = ({exercises}) => {
-    return <p><b>Number of exercises {exercises.reduce( (acc,curr) => acc += curr)}</b></p>
+    return <p><b>Number of exercises {exercises.reduce((acc, curr) => {
+        console.log(acc, curr)
+        return acc += curr
+    })}</b></p>
 }
 const App = () => {
     const course = {
