@@ -6,6 +6,7 @@ const App = () => {
     ])
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
+    const [filter, setFilter] = useState('')
 
     const onChangeName = (event) => {
         setNewName(event.target.value);
@@ -13,6 +14,10 @@ const App = () => {
     const onChangeNumber = (event) => {
         setNewNumber(event.target.value);
     }
+    const onChangeFilter = (event) => {
+        setFilter(event.target.value);
+    }
+
     const onSubmit = (event) => {
         event.preventDefault();
         isDuplicated(newName)
@@ -27,6 +32,10 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
+            <div>
+                <p>Filter shown with <input value={filter} onChange={onChangeFilter}/></p>
+            </div>
+            <h3>Add new</h3>
             <form onSubmit={onSubmit}>
                 <div>
                     name: <input value={newName} onChange={onChangeName}/>
@@ -38,9 +47,9 @@ const App = () => {
                     <button type="submit">add</button>
                 </div>
             </form>
-            <h2>Numbers</h2>
-            {persons.map((person) =>
-                (<p key={person.name}>{person.name} - {person.number}</p>))}
+            <h3>Numbers</h3>
+            {persons.filter(person => person.name.includes(filter)).map(person => <p>{person.name
+            }</p>)}
         </div>
     )
 }
