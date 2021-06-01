@@ -1,8 +1,14 @@
 import React, {useState} from 'react'
+import {SearchBar} from "./SearchBar";
+import {PersonForm} from "./PersonForm";
+import {Persons} from "./Persons";
 
 const App = () => {
     const [persons, setPersons] = useState([
-        {name: 'Arto Hellas', number: '1563-090604'}
+        {name: 'Arto Hellas', number: '040-123456'},
+        {name: 'Ada Lovelace', number: '39-44-5323523'},
+        {name: 'Dan Abramov', number: '12-43-234345'},
+        {name: 'Mary Poppendieck', number: '39-23-6423122'}
     ])
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
@@ -32,26 +38,16 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
-            <div>
-                <p>Filter shown with <input value={filter} onChange={onChangeFilter}/></p>
-            </div>
+            <SearchBar filter={filter} onChangeFilter={onChangeFilter}/>
             <h3>Add new</h3>
-            <form onSubmit={onSubmit}>
-                <div>
-                    name: <input value={newName} onChange={onChangeName}/>
-                </div>
-                <div>
-                    number: <input value={newNumber} onChange={onChangeNumber}/>
-                </div>
-                <div>
-                    <button type="submit">add</button>
-                </div>
-            </form>
+            <PersonForm
+                newNumber={newNumber} newName={newName}
+                onSubmit={onSubmit} onChangeNumber={onChangeNumber}
+                onChangeName={onChangeName}/>
             <h3>Numbers</h3>
-            {persons.filter(person => person.name.includes(filter)).map(person => <p>{person.name
-            }</p>)}
+            <Persons persons={persons} filter={filter} />
         </div>
     )
-}
+};
 
 export default App
