@@ -3,7 +3,6 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 
 function CountryDetails({country}) {
-    console.log(country)
     return (
         <div>
             <h2>{country.name}</h2>
@@ -13,8 +12,19 @@ function CountryDetails({country}) {
             <ul>
                 {country.languages.map(language => <li key={language.name}>{language.name}</li>)}
             </ul>
-            <img src={country.flag}  alt={'flag'} width={'10%'}/>
+            <img src={country.flag} alt={'flag'} width={'10%'}/>
         </div>
+    )
+}
+
+function ShowButton({country}) {
+    const [isShowed, setIsShowed] = useState(false);
+    return (
+        <>
+            <p>{country.name} <button onClick={() => setIsShowed(!isShowed)}>Show</button></p>
+
+            {isShowed && <CountryDetails country={country}/> }
+        </>
     )
 }
 
@@ -52,7 +62,9 @@ function App() {
                     ? (countries.filter(country => country.name.toLowerCase().includes(searchWord))
                         .map(filteredC => <CountryDetails key={filteredC.name} country={filteredC}/>))
                     : (countries.filter(country => country.name.toLowerCase().includes(searchWord))
-                        .map(filteredC => <p key={filteredC.name}>{filteredC.name}</p>)))}
+                        .map(filteredC =>
+                            <ShowButton  key={filteredC.name} country={filteredC}/>
+                        )))}
         </div>
     )
 };
