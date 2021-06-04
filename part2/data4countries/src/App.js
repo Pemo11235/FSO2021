@@ -4,7 +4,8 @@ import axios from "axios";
 
 function CountryDetails({country}) {
     return (
-        <div>
+        <div>            .finally(() => setReady(true))
+
             <h2>{country.name}</h2>
             <p>Capital: {country.capital}</p>
             <p>Population: {country.population}</p>
@@ -13,6 +14,7 @@ function CountryDetails({country}) {
                 {country.languages.map(language => <li key={language.name}>{language.name}</li>)}
             </ul>
             <img src={country.flag} alt={'flag'} width={'10%'}/>
+            <Weather capital={country.capital}/>
         </div>
     )
 }
@@ -21,10 +23,41 @@ function ShowButton({country}) {
     const [isShowed, setIsShowed] = useState(false);
     return (
         <>
-            <p>{country.name} <button onClick={() => setIsShowed(!isShowed)}>Show</button></p>
+            <p>{country.name}
+                <button onClick={() => setIsShowed(!isShowed)}>Show</button>
+            </p>
 
-            {isShowed && <CountryDetails country={country}/> }
+            {isShowed && <CountryDetails country={country}/>}
         </>
+    )
+}
+
+function Weather({capital}) {
+    const [weather, setWeather] = useState(null);
+
+    const api_key = process.env.REACT_APP_API_KEY;
+    const urlWeather = 'http://api.weatherstack.com/current' +
+        '?access_key=' + api_key +
+        '&query=' + capital;
+
+    useEffect(() => {
+        axios
+            .get(urlWeather)
+            .then(response => setWeather(response.data.current))
+    }, [urlWeather]);
+
+
+    return (
+        <div>
+            {weather && (
+                <>
+                    <h2>Weather in {capital}</h2>
+                    <p><b>Temperature: {weather.temperature} Celsius</b></p>
+                    <img src={weather.weather_icons} alt={weather}/>
+                    <p><b>Wind:</b>{weather.wind_speed} mph direction {weather.wind_dir}</p>
+                </>
+            )}
+        </div>
     )
 }
 
@@ -38,19 +71,18 @@ function App() {
         setSearchWord(event.target.value.toLowerCase())
     };
 
-    useEffect(() => {
-        axios
-            .get(url)
-            .then(response => setCountries(response.data))
-    }, []);
-
-
     const length = () => {
         const matched = countries
             .filter((country) => (country.name.toLowerCase().includes(searchWord)));
 
         return matched.length;
     }
+
+    useEffect(() => {
+        axios
+            .get(url)
+            .then(response => setCountries(response.data))
+    }, []);
 
     return (
         <div>
@@ -63,10 +95,10 @@ function App() {
                         .map(filteredC => <CountryDetails key={filteredC.name} country={filteredC}/>))
                     : (countries.filter(country => country.name.toLowerCase().includes(searchWord))
                         .map(filteredC =>
-                            <ShowButton  key={filteredC.name} country={filteredC}/>
+                            <ShowButton key={filteredC.name} country={filteredC}/>
                         )))}
         </div>
     )
-};
+}
 
 export default App;
