@@ -14,7 +14,8 @@ const create = newObject => {
 
 const remove = id => {
     const request = axios.delete(`${baseUrl}/${id}`)
-    return request.then(response => response.statusText === 'OK' ? id : response.statusText)
+    return request.then(response => response.statusText === 'OK' ? id : response.status)
+        .catch(error => 'error')
 }
 
 const update = (id, newObject) => {
