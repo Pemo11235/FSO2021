@@ -2,13 +2,14 @@ import React, {useEffect, useState} from 'react'
 import {SearchBar} from "./SearchBar";
 import {PersonForm} from "./PersonForm";
 import {Persons} from "./Persons";
-import axios from "axios";
+import services from './services/contacts'
 
 const App = () => {
     const [persons, setPersons] = useState([])
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
     const [filter, setFilter] = useState('')
+
 
     const onChangeName = (event) => {
         setNewName(event.target.value);
@@ -28,14 +29,14 @@ const App = () => {
         }
         isDuplicated(newName)
             ? window.alert(`${newName} is already in the phonebook !`)
-            : create(newObject)
+            : services
+                .create(newObject)
+                .then(newObj => {
+                        setPersons(persons.concat(newObj))
+                    }
+                )
     }
 
-    const create = newObject => {
-        const request = axios.post('http://localhost:3001/persons', newObject)
-        setPersons(persons.concat({name: newName, number: newNumber}))
-        return request.then(response => response.data)
-    }
 
     const isDuplicated = (name) => {
         let cleanedName = name.replaceAll(' ', '');
@@ -44,9 +45,13 @@ const App = () => {
 
 
     useEffect(() => {
-        axios
-            .get('http://localhost:3001/persons')
-            .then(response => setPersons(response.data))
+        services
+            .getAll()
+            .then(initialPersons => {
+                setPersons(initialPersons)
+            })
+
+
     }, []);
 
     return (
@@ -59,7 +64,7 @@ const App = () => {
                 onSubmit={onSubmit} onChangeNumber={onChangeNumber}
                 onChangeName={onChangeName}/>
             <h3>Numbers</h3>
-            <Persons persons={persons} filter={filter}/>
+            <Persons persons={persons} filterWord={filter}/>
         </div>
     )
 };

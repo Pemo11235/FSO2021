@@ -1,12 +1,20 @@
-function Persons({persons, filter}) {
-    return(
+import React from "react";
+
+function Persons({persons, filterWord}) {
+
+    console.log(filterWord)
+    return (
         <div>
             {persons
-                .filter(person => person.name.includes(filter))
-                .map(person =>
-                    <p key={person.name}>{person.name} - {person.number}</p>
-                )}
+                .filter((person) =>
+                    person.name.toLowerCase().includes(filterWord.toLowerCase())
+                )
+                .map(filteredP =>
+                    <p key={filteredP.id}> {filteredP.name} - {filteredP.number}</p>
+                )
+            }
         </div>
     )
 }
+
 export {Persons}
