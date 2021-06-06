@@ -110,7 +110,7 @@ const App = () => {
                     }
                 </>
             )
-        }s
+        }
         return null
     }
 
