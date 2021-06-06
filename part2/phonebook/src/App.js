@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import {SearchBar} from "./SearchBar";
 import {PersonForm} from "./PersonForm";
 import {Persons} from "./Persons";
-import services from './services/contacts'
+import services from './services/persons'
 
 const App = () => {
     const [persons, setPersons] = useState([])
@@ -21,6 +21,14 @@ const App = () => {
         setFilter(event.target.value);
     }
 
+    const onDelete = (id) => {
+        const personToDelete = persons.find(person => person.id === id)
+        const result = window.confirm(`Delete ${personToDelete.name}?`)
+
+        if(result) {
+            services.remove(id).then(id => setPersons(persons.filter(person => person.id !== id)))
+        }
+    }
     const onSubmit = (event) => {
         event.preventDefault();
         const newObject = {
@@ -50,8 +58,6 @@ const App = () => {
             .then(initialPersons => {
                 setPersons(initialPersons)
             })
-
-
     }, []);
 
     return (
@@ -64,7 +70,7 @@ const App = () => {
                 onSubmit={onSubmit} onChangeNumber={onChangeNumber}
                 onChangeName={onChangeName}/>
             <h3>Numbers</h3>
-            <Persons persons={persons} filterWord={filter}/>
+            <Persons persons={persons} filterWord={filter} onDelete={onDelete}/>
         </div>
     )
 };

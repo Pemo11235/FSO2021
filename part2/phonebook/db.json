@@ -36,26 +36,6 @@
       "name": "Mary Poppendieck",
       "number": "39-23-6423122",
       "id": 4
-    },
-    {
-      "name": "Test",
-      "number": "123 098 567",
-      "id": 5
-    },
-    {
-      "name": "Test 2",
-      "number": "123 456",
-      "id": 6
-    },
-    {
-      "name": "Dante",
-      "number": "666",
-      "id": 7
-    },
-    {
-      "name": "new",
-      "number": "123",
-      "id": 8
     }
   ]
 }

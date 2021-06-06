@@ -1,8 +1,7 @@
 import React from "react";
+import {DeleteButton} from "./DeleteButton";
 
-function Persons({persons, filterWord}) {
-
-    console.log(filterWord)
+function Persons({persons, filterWord, onDelete}) {
     return (
         <div>
             {persons
@@ -10,7 +9,9 @@ function Persons({persons, filterWord}) {
                     person.name.toLowerCase().includes(filterWord.toLowerCase())
                 )
                 .map(filteredP =>
-                    <p key={filteredP.id}> {filteredP.name} - {filteredP.number}</p>
+                    <p key={filteredP.id}> {filteredP.name} - {filteredP.number}
+                        <DeleteButton onClickAction={()=>onDelete(filteredP.id)} />
+                    </p>
                 )
             }
         </div>
