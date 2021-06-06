@@ -22,15 +22,26 @@ const App = () => {
 
     const onSubmit = (event) => {
         event.preventDefault();
+        const newObject = {
+            name: newName,
+            number: newNumber
+        }
         isDuplicated(newName)
             ? window.alert(`${newName} is already in the phonebook !`)
-            : setPersons(persons.concat({name: newName, number: newNumber}))
+            : create(newObject)
+    }
+
+    const create = newObject => {
+        const request = axios.post('http://localhost:3001/persons', newObject)
+        setPersons(persons.concat({name: newName, number: newNumber}))
+        return request.then(response => response.data)
     }
 
     const isDuplicated = (name) => {
         let cleanedName = name.replaceAll(' ', '');
         return persons.find(person => person.name === cleanedName && person.name.length === cleanedName.length);
     }
+
 
     useEffect(() => {
         axios

@@ -4,7 +4,7 @@ function Persons({persons, filter}) {
             {persons
                 .filter(person => person.name.includes(filter))
                 .map(person =>
-                    <p>{person.name} - {person.number}</p>
+                    <p key={person.name}>{person.name} - {person.number}</p>
                 )}
         </div>
     )
