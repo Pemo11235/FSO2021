@@ -16,10 +16,10 @@
   "profile": {
     "name": "typicode"
   },
-  "persons":[
+  "persons": [
     {
       "name": "Arto Hellas",
-      "number": "040-123456",
+      "number": "123",
       "id": 1
     },
     {
@@ -36,6 +36,11 @@
       "name": "Mary Poppendieck",
       "number": "39-23-6423122",
       "id": 4
+    },
+    {
+      "name": "ARTO",
+      "number": "098765",
+      "id": 5
     }
   ]
 }
