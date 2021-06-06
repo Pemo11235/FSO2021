@@ -25,10 +25,34 @@ const App = () => {
         const personToDelete = persons.find(person => person.id === id)
         const result = window.confirm(`Delete ${personToDelete.name}?`)
 
-        if(result) {
+        if (result) {
             services.remove(id).then(id => setPersons(persons.filter(person => person.id !== id)))
         }
     }
+
+    const onUpdate = (id, newObj) => {
+        const personToUpdate = persons.find(person => person.id === id)
+        const result = window.confirm(`${personToUpdate.name} is already added to phonebook, replace the old number with a new one?`)
+
+        if (result) {
+            services.update(id, newObj).then(replaced => {
+                const newPersons = persons.map(
+                    (person) => person.id === replaced.id ?
+                        {
+                            id: replaced.id,
+                            name: replaced.name,
+                            number: replaced.number
+                        } : {
+                            id: person.id,
+                            name: person.name,
+                            number: person.number
+                        }
+                )
+                setPersons(newPersons)
+            })
+        }
+    }
+
     const onSubmit = (event) => {
         event.preventDefault();
         const newObject = {
@@ -36,21 +60,23 @@ const App = () => {
             number: newNumber
         }
         isDuplicated(newName)
-            ? window.alert(`${newName} is already in the phonebook !`)
+            ? onUpdate(getDuplicatedID(newName), newObject)
             : services
                 .create(newObject)
-                .then(newObj => {
-                        setPersons(persons.concat(newObj))
-                    }
-                )
+                .then(newObj => {setPersons(persons.concat(newObj) )})
     }
 
 
     const isDuplicated = (name) => {
-        let cleanedName = name.replaceAll(' ', '');
-        return persons.find(person => person.name === cleanedName && person.name.length === cleanedName.length);
+        return persons.find(person => person.name.toLowerCase() === name.toLowerCase() &&
+            person.name.length === name.length);
     }
 
+    const getDuplicatedID = (name) => {
+        const foundPerson = persons.find(person => person.name.toLowerCase() === name.toLowerCase() &&
+            person.name.length === name.length);
+        return foundPerson.id
+    }
 
     useEffect(() => {
         services
