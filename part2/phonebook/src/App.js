@@ -2,14 +2,16 @@ import React, {useEffect, useState} from 'react'
 import {SearchBar} from "./SearchBar";
 import {PersonForm} from "./PersonForm";
 import {Persons} from "./Persons";
-import services from './services/persons'
+import services from './services/persons';
+import './App.css'
 
 const App = () => {
     const [persons, setPersons] = useState([])
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
     const [filter, setFilter] = useState('')
-
+    const [notificationType, setNotificationType] = useState('')
+    const [notificationTest, setNotificationText] = useState('')
 
     const onChangeName = (event) => {
         setNewName(event.target.value);
@@ -26,7 +28,12 @@ const App = () => {
         const result = window.confirm(`Delete ${personToDelete.name}?`)
 
         if (result) {
-            services.remove(id).then(id => setPersons(persons.filter(person => person.id !== id)))
+            services
+                .remove(id)
+                .then(res => res !== 'error'
+                    ? setPersons(persons.filter(person => person.id !== id))
+                    : handleError(personToDelete)
+                )
         }
     }
 
@@ -63,7 +70,11 @@ const App = () => {
             ? onUpdate(getDuplicatedID(newName), newObject)
             : services
                 .create(newObject)
-                .then(newObj => {setPersons(persons.concat(newObj) )})
+                .then(newObj => {
+                    setPersons(persons.concat(newObj))
+                    setNotificationType('added')
+                    setNotificationText(`Added ${newName}`)
+                })
     }
 
 
@@ -78,6 +89,36 @@ const App = () => {
         return foundPerson.id
     }
 
+    const Notification = ({message, type}) => {
+        if (message) {
+            return (
+                <>
+                    {type === 'added' &&
+                    <div className={'added'}>
+                        {message}
+                    </div>
+                    }
+                    {type === 'error' &&
+                    <div className={'error'}>
+                        {message}
+                    </div>
+                    }
+                    {setTimeout(() => {
+                        setNotificationText('')
+                        setNotificationType('')
+                    }, 3000)
+                    }
+                </>
+            )
+        }s
+        return null
+    }
+
+    const handleError = person => {
+        setNotificationType('error')
+        setNotificationText(`Information of ${person.name} has already been removed from server`)
+    }
+
     useEffect(() => {
         services
             .getAll()
@@ -89,6 +130,7 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
+            {notificationType && <Notification message={notificationTest} type={notificationType}/>}
             <SearchBar filter={filter} onChangeFilter={onChangeFilter}/>
             <h3>Add new</h3>
             <PersonForm
