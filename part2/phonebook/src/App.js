@@ -11,7 +11,7 @@ const App = () => {
     const [newNumber, setNewNumber] = useState('')
     const [filter, setFilter] = useState('')
     const [notificationType, setNotificationType] = useState('')
-    const [notificationTest, setNotificationText] = useState('')
+    const [notificationText, setNotificationText] = useState('')
 
     const onChangeName = (event) => {
         setNewName(event.target.value);
@@ -42,21 +42,28 @@ const App = () => {
         const result = window.confirm(`${personToUpdate.name} is already added to phonebook, replace the old number with a new one?`)
 
         if (result) {
-            services.update(id, newObj).then(replaced => {
-                const newPersons = persons.map(
-                    (person) => person.id === replaced.id ?
-                        {
-                            id: replaced.id,
-                            name: replaced.name,
-                            number: replaced.number
-                        } : {
-                            id: person.id,
-                            name: person.name,
-                            number: person.number
-                        }
-                )
-                setPersons(newPersons)
-            })
+            services
+                .update(id, newObj)
+                .then(replaced => {
+                    const newPersons = persons.map(
+                        (person) => person.id === replaced.id ?
+                            {
+                                id: replaced.id,
+                                name: replaced.name,
+                                number: replaced.number
+                            } : {
+                                id: person.id,
+                                name: person.name,
+                                number: person.number
+                            }
+                    )
+                    setPersons(newPersons)
+                })
+                .catch(err => {
+                    console.log(err.response.data)
+                    setNotificationText(err.response.data.error)
+                    setNotificationType('error')
+                })
         }
     }
 
@@ -74,6 +81,11 @@ const App = () => {
                     setPersons(persons.concat(newObj))
                     setNotificationType('added')
                     setNotificationText(`Added ${newName}`)
+                })
+                .catch(err => {
+                    console.log(err.response.data)
+                    setNotificationText(err.response.data.error)
+                    setNotificationType('error')
                 })
     }
 
@@ -130,7 +142,7 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
-            {notificationType && <Notification message={notificationTest} type={notificationType}/>}
+            {notificationType && <Notification message={notificationText} type={notificationType}/>}
             <SearchBar filter={filter} onChangeFilter={onChangeFilter}/>
             <h3>Add new</h3>
             <PersonForm
