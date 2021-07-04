@@ -6,7 +6,7 @@ blogsRouter.get('/', (request, response) => {
     .find({})
     .then((blogs) => {
       response.json(blogs);
-    })
+    });
 });
 
 blogsRouter.post('/', (request, response) => {

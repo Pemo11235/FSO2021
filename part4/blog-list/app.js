@@ -1,6 +1,6 @@
-
-const config = require('./utils/config');
 const express = require('express');
+const config = require('./utils/config');
+
 const app = express();
 const cors = require('cors');
 const blogsRouter = require('./controllers/blogs');
