@@ -116,7 +116,7 @@ describe('favorite blog', () => {
     })
 })
 
-describe('most blogs auth', () => {
+describe('most blogs author', () => {
 
     const mostBlogNoElem = {
         author: '',
@@ -141,5 +141,33 @@ describe('most blogs auth', () => {
     test('of bigger list is calculated right', () => {
         const result = listHelper.mostBlogs(blogs)
         expect(result).toEqual(mostBlog)
+    })
+})
+
+describe('most likes per author', () => {
+
+    const mostLikesNoElem = {
+        author: '',
+        likes: 0
+    }
+    const mostLikesOneElem = {
+        author: 'Edsger W. Dijkstra',
+        likes: 5
+    }
+    const mostLikes = {
+        author: 'Edsger W. Dijkstra',
+        likes: 17
+    }
+    test('of empty list is zero', () => {
+        const result = listHelper.mostLikes(emptyList)
+        expect(result).toEqual(mostLikesNoElem)
+    })
+    test('when list has only one blog, equals the likes of that', () => {
+        const result = listHelper.mostLikes(listWithOneBlog)
+        expect(result).toEqual(mostLikesOneElem)
+    })
+    test('of bigger list is calculated right', () => {
+        const result = listHelper.mostLikes(blogs)
+        expect(result).toEqual(mostLikes)
     })
 })

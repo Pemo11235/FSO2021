@@ -1,8 +1,8 @@
 const {forEach} = require("lodash/fp/_util");
-const {countBy, sortBy, keyBy} = require("lodash/collection");
-const {uniqBy, indexOf, findIndex} = require("lodash/array");
+const {countBy, sortBy, keyBy, reduce} = require("lodash/collection");
+const {uniqBy, indexOf, findIndex, uniq} = require("lodash/array");
 const {property, iteratee} = require("lodash/util");
-const {max} = require("lodash");
+const {max, groupBy, zip, maxBy} = require("lodash");
 const {value} = require("lodash/seq");
 const {mapKeys, findKey, mapValues} = require("lodash/object");
 const dummy = (blogs) => {
@@ -56,9 +56,28 @@ const mostBlogs =  (blogs) => {
 	return { author: '' , blogs: 0}
 }
 
+const  mostLikes =  (blogs) => {
+	if(blogs.length > 0) {
+		const authors = uniq(blogs.map(blog => blog.author))
+
+		let obj = authors.map(author => ({author: author, likes: 0}))
+
+		for (const objElement of obj) {
+			for (const blElement of blogs) {
+				if(objElement.author === blElement.author){
+					objElement.likes += blElement.likes
+				}
+			}
+		}
+		const maxLikes = maxBy(obj, property('likes'))
+		return maxLikes
+	}
+	return { author: '' , likes: 0}
+}
 module.exports = {
 	dummy,
 	totalLikes,
 	favoriteBlog,
-	mostBlogs
+	mostBlogs,
+	mostLikes
 }
