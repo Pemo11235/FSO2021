@@ -4,6 +4,7 @@ const app = require('../app')
 
 const api = supertest(app)
 const Blog = require('../models/blog')
+const {forEach} = require("lodash");
 const initialBlogs = [
     {
         title: "React patterns",
@@ -38,6 +39,14 @@ test('all blogs are returned', async () => {
     const repsonse = await api
         .get('/api/blogs/')
     expect(repsonse.body).toHaveLength(initialBlogs.length)
+}, 10000)
+
+test('check the unique identifier propriety', async () => {
+    const response = await api.get('/api/blogs');
+
+    for (const blog of response.body) {
+        expect(blog.id).toBeDefined()
+    }
 }, 10000)
 
 afterAll( () => {
