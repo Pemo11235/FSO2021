@@ -4,7 +4,7 @@ const app = require('../app')
 
 const api = supertest(app)
 const Blog = require('../models/blog')
-const {forEach} = require("lodash");
+const helper = require('./test_helper')
 const initialBlogs = [
     {
         title: "React patterns",
@@ -36,9 +36,9 @@ test('blogs are returned as JSON', async () => {
 }, 100000)
 
 test('all blogs are returned', async () => {
-    const repsonse = await api
+    const response = await api
         .get('/api/blogs/')
-    expect(repsonse.body).toHaveLength(initialBlogs.length)
+    expect(response.body).toHaveLength(initialBlogs.length)
 }, 10000)
 
 test('check the unique identifier propriety', async () => {
@@ -49,6 +49,24 @@ test('check the unique identifier propriety', async () => {
     }
 }, 10000)
 
-afterAll( () => {
+test('successful POST of a Blog', async () => {
+    const blogToPost = {
+        title: 'Go To Statement Considered Harmful',
+        author: 'Edsger W. Dijkstra',
+        url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+        likes: 5,
+    };
+
+)
+    await api
+        .post('/api/blogs/')
+        .send(blogToPost)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
+    const blogAtTheEnd = await helper.blogsInDB();
+    expect(blogAtTheEnd).toHaveLength(initialBlogs.length + 1)
+})
+afterAll(() => {
     mongoose.connection.close()
 })
