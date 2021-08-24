@@ -10,13 +10,18 @@ blogsRouter.get('/', async (request, response) => {
 blogsRouter.post('/', async (request, response) => {
     let blogObj = request.body;
 
-    if(request.body.likes === undefined || null ){
-        blogObj = {...blogObj, likes: 0}
-    }
+    if ((blogObj.title === undefined || null) && (blogObj.url === undefined || null)) {
+        response.status(400).end()
+    } else {
 
-    const blog = new Blog(blogObj)
-    const result = await blog.save()
-    response.status(201).json(result)
+        if (request.body.likes === undefined || null) {
+            blogObj = {...blogObj, likes: 0}
+        }
+
+        const blog = new Blog(blogObj)
+        const result = await blog.save()
+        response.status(201).json(result)
+    }
 
 });
 

@@ -5,26 +5,13 @@ const app = require('../app')
 const api = supertest(app)
 const Blog = require('../models/blog')
 const helper = require('./test_helper')
-const initialBlogs = [
-    {
-        title: "React patterns",
-        author: "Michael Chan",
-        url: "https://reactpatterns.com/",
-        likes: 7,
-    },
-    {
-        title: "Go To Statement Considered Harmful",
-        author: "Edsger W. Dijkstra",
-        url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
-        likes: 5,
-    },
-]
+
 
 beforeEach(async () => {
     await Blog.deleteMany({})
-    let blogObject = new Blog(initialBlogs[0])
+    let blogObject = new Blog(helper.initialBlogs[0])
     await blogObject.save()
-    blogObject = new Blog(initialBlogs[1])
+    blogObject = new Blog(helper.initialBlogs[1])
     await blogObject.save()
 })
 
@@ -38,7 +25,7 @@ test('blogs are returned as JSON', async () => {
 test('all blogs are returned', async () => {
     const response = await api
         .get('/api/blogs/')
-    expect(response.body).toHaveLength(initialBlogs.length)
+    expect(response.body).toHaveLength(helper.initialBlogs.length)
 }, 10000)
 
 test('check the unique identifier propriety', async () => {
@@ -65,7 +52,7 @@ test('successful POST of a Blog', async () => {
         .expect('Content-Type', /application\/json/)
 
     const blogAtTheEnd = await helper.blogsInDB();
-    expect(blogAtTheEnd).toHaveLength(initialBlogs.length + 1)
+    expect(blogAtTheEnd).toHaveLength(helper.initialBlogs.length + 1)
 }, 10000)
 
 test('set default value for likes if miss', async () => {
@@ -87,6 +74,22 @@ test('set default value for likes if miss', async () => {
     }
 
 }, 10000)
+
+test('blog without title and url return 400 bad request', async () => {
+    const blogWithoutTitleAndUrl = {
+        author: 'Jhon Doe',
+        likes: '5',
+    }
+
+    await api
+        .post('/api/blogs/')
+        .send(blogWithoutTitleAndUrl)
+        .expect(400)
+
+    const blogAtTheEnd = await helper.blogsInDB();
+    expect(blogAtTheEnd).toHaveLength(helper.initialBlogs.length)
+
+},10000)
 afterAll(() => {
     mongoose.connection.close()
 })
