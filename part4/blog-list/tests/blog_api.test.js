@@ -57,7 +57,7 @@ test('successful POST of a Blog', async () => {
         likes: 5,
     };
 
-)
+
     await api
         .post('/api/blogs/')
         .send(blogToPost)
@@ -66,7 +66,27 @@ test('successful POST of a Blog', async () => {
 
     const blogAtTheEnd = await helper.blogsInDB();
     expect(blogAtTheEnd).toHaveLength(initialBlogs.length + 1)
-})
+}, 10000)
+
+test('set default value for likes if miss', async () => {
+    let blogWithoutLikes = {
+        title: 'Go To Statement Considered Harmful',
+        author: 'Edsger W. Dijkstra',
+        url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+    }
+
+
+    await api
+        .post('/api/blogs')
+        .send(blogWithoutLikes)
+
+    const blogAtTheEnd = await helper.blogsInDB();
+
+    for (const blog of blogAtTheEnd) {
+        expect(blog.likes).toBeDefined()
+    }
+
+}, 10000)
 afterAll(() => {
     mongoose.connection.close()
 })

@@ -1,11 +1,14 @@
 const Blog = require('../models/blog')
 
 const blogsInDB = async () => {
-    const blogs = Blog.find({})
+    return Blog.find({})
+}
 
-    return blogs
+const isLikesNotSet = async (blog) => {
+    return (!blog.likes)
 }
 
 module.exports = {
-    blogsInDB
+    blogsInDB,
+    isLikesSet: isLikesNotSet
 }
