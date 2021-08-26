@@ -108,6 +108,22 @@ describe('deletion of a blog', () => {
 
     }, 10000)
 })
+
+describe('updating of a blog', () => {
+    test('check if update on likes=100 succeed ', async () => {
+        const blogAtStart = await helper.blogsInDB();
+        let blogToUpdate = blogAtStart[0].toJSON();
+        blogToUpdate.likes = 100;
+
+        await api
+            .put(`/api/blogs/${blogToUpdate.id}`)
+            .send(blogToUpdate);
+
+        const blogAtEnd = await helper.blogsInDB();
+        expect(blogAtEnd[0].likes).toEqual(100);
+
+    }, 10000)
+});
 afterAll(() => {
     mongoose.connection.close()
 })
