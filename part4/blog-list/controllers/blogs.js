@@ -1,7 +1,16 @@
 const blogsRouter = require('express').Router();
+const jwt = require('jsonwebtoken')
 const Blog = require('../models/blog');
-const {request, response} = require("express");
 const User = require("../models/user");
+
+const getTokenFrom = request => {
+    const authorization = request.get('authorization') 
+    if(authorization && authorization.toLowerCase().startsWith('bearer ')) {
+        // subtring take from [7 char, end of string]
+        return authorization.substring(7)
+    }
+    return null
+}
 
 blogsRouter.get('/', async (request, response) => {
     const allBlogs = await Blog.find({}).populate('user', {username: 1, name: 1});
@@ -10,24 +19,34 @@ blogsRouter.get('/', async (request, response) => {
 });
 
 blogsRouter.post('/', async (request, response) => {
-    let blogObj = request.body;
-    const user = await User.findById(blogObj.user)
+    const body = request.body;
+    const token = getTokenFrom(request)
+    const decodedToken = jwt.verify(token, process.env.SECRET)
 
-    if ((blogObj.title === undefined || null) && (blogObj.url === undefined || null)) {
+    if(!token || !decodedToken.id) {
+        return response.status(401).json({error: 'token missing or invalid'})
+    }
+
+    const user = await User.findById(decodedToken.id)
+
+    if ((body.title === undefined || null) && (body.url === undefined || null)) {
         response.status(400).end()
     } else {
 
-        if (request.body.likes === undefined || null) {
-            blogObj = {...blogObj, likes: 0}
-        }
+        const blog = new Blog({
+            title: body.title,
+            author: body.author,
+            url: body.url,
+            likes: body.likes ?? 0,
+            user: user._id
+        })
 
-        const blog = new Blog(blogObj)
         const result = await blog.save()
-        response.status(201).json(result)
-        // const findUpdate = await  User.findByIdAndUpdate(blogObj.user, user, {new: true})
+
         user.blogs = user.blogs.concat(result._id)
-        console.log(user)
         await user.save()
+
+        response.status(201).json(result)
     }
 
 });
