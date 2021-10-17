@@ -9,7 +9,7 @@ content-type: application/json
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlBlbW8xMTIzNSIsImlkIjoiNjE2YzNlOTZjODgxYTg5NDhkMTMyZWYxIiwiaWF0IjoxNjM0NDg0OTI5fQ.3bZtMvAmZGGJcdnqUIRREssZ4nS87Vo9-N4ENu7my6g 
 
 {
-    "title": "My token test blog second",
+    "title": "My token test blog third",
     "author": "Me and myself",
     "url": "www.tokentest.com"
 }
