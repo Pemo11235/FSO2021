@@ -1,7 +1,10 @@
 const Blog = require('../models/blog')
 const User = require('../models/user')
 
-
+const user = {
+    username: 'Pemo11235',
+    password: 'Pemo11235'
+}
 const initialBlogs = [
     {
         title: "React patterns",
@@ -31,6 +34,7 @@ const usersInDb = async () => {
 }
 
 module.exports = {
+    user,
     initialBlogs,
     blogsInDB,
     isLikesNotSet,

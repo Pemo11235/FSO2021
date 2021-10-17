@@ -4,7 +4,7 @@
 ###
  GET http://localhost:3003/api/users 
 ###
-DELETE http://localhost:3003/api/blogs/616c604df39fd5b40c317514
+DELETE http://localhost:3003/api/blogs/616c7e8a59f2b6bdea3f334a
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlBlbW8xMTIzNSIsImlkIjoiNjE2YzNlOTZjODgxYTg5NDhkMTMyZWYxIiwiaWF0IjoxNjM0NDg0OTI5fQ.3bZtMvAmZGGJcdnqUIRREssZ4nS87Vo9-N4ENu7my6g 
 
 ###

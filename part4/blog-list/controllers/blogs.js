@@ -52,9 +52,11 @@ blogsRouter.delete('/:id', userExtractor , async (request, response) => {
     if(blogToCheckBeforeRemove.user.toString() === user._id.toString()) {
         const result = await Blog.findByIdAndRemove(idToDelete);
         response.status(204).end();
+        return;
     }
     
     response.status(401).json({error: "Unauthorizated user for this operation!"}).end();
+    return;
 });
 
 blogsRouter.put('/:id', async (request,response) => {
