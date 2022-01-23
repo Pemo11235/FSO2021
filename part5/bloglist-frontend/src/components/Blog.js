@@ -23,7 +23,7 @@ const Blog = ({ blog }) => {
     )
     return blog.user.username === username
   }
-  const handleRemove = (event) => {
+  const handleRemove = () => {
     if (window.confirm(`Remove blog: ${blog.title} by ${blog.author} ? `)) {
       blogService.remove(blog.id)
     }
