@@ -10,6 +10,10 @@ const CreateBlogForm = () => {
 
   const handleCreate = async (event) => {
     event.preventDefault()
+    const { token } = JSON.parse(
+      window.localStorage.getItem('loggedBlogAppUser')
+    )
+    await blogService.setToken(token)
     await blogService.create({ title, author, url })
     setNewBlogNotification(`A new blog: ${title} by ${author} is added`)
     setTimeout(() => {

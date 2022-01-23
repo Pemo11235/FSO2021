@@ -17,6 +17,18 @@ const Blog = ({ blog }) => {
     blogService.update(id, newObject)
   }
 
+  const canUserDelete = () => {
+    const { username } = JSON.parse(
+      window.localStorage.getItem('loggedBlogAppUser')
+    )
+    return blog.user.username === username
+  }
+  const handleRemove = (event) => {
+    if (window.confirm(`Remove blog: ${blog.title} by ${blog.author} ? `)) {
+      blogService.remove(blog.id)
+    }
+  }
+
   const buildObject = () => ({
     id: blog.id,
     newObject: {
@@ -39,6 +51,8 @@ const Blog = ({ blog }) => {
             Likes: {blog.likes} <button onClick={handleLike}>Like</button>
             <br />
             User: {blog.user.username}
+            <br />
+            {canUserDelete() && <button onClick={handleRemove}>remove</button>}
           </div>
         )}
       </div>
