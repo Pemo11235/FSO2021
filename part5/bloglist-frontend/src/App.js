@@ -8,7 +8,9 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  // const [errorMessage, setErrorMessage] = useState(null)
+
+  const [newBlogNotification, setNewBlogNotification] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
@@ -41,10 +43,10 @@ const App = () => {
       setPassword('')
       setUsername('')
     } catch (exception) {
-      // setErrorMessage('Wrong credentials')
-      // setTimeout(() => {
-      //   setErrorMessage(null)
-      // }, 5000)
+      setErrorMessage('Wrong credentials')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
     }
   }
 
@@ -58,6 +60,10 @@ const App = () => {
     event.preventDefault()
     await blogService.create({ title, author, url })
     await blogService.getAll().then((blogs) => setBlogs(blogs))
+    setNewBlogNotification(`A new blog: ${title} by ${author} is added`)
+    setTimeout(() => {
+      setNewBlogNotification(null)
+    }, 5000)
   }
 
   const loginForm = () => (
@@ -137,10 +143,37 @@ const App = () => {
       </form>
     </>
   )
+
+  const errorNotify = () => (
+    <div
+      style={{
+        border: '2px solid red',
+        borderRadius: '2%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignContent: 'center',
+      }}>
+      <h3 style={{ color: 'red' }}>{errorMessage}</h3>
+    </div>
+  )
+  const newBlogNotify = () => (
+    <div
+      style={{
+        border: '2px solid green',
+        borderRadius: '2%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignContent: 'center',
+      }}>
+      <h3 style={{ color: 'green' }}>{newBlogNotification}</h3>
+    </div>
+  )
   return (
     <div>
+      {errorMessage && errorNotify()}
       {!user && loginForm()}
       {user && userLoggedIn()}
+      {newBlogNotification && newBlogNotify()}
       {user && createBlog()}
       {user && blogList()}
     </div>
