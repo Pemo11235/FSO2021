@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import Togglable from './components/Toggable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -172,9 +173,9 @@ const App = () => {
     <div>
       {errorMessage && errorNotify()}
       {!user && loginForm()}
-      {user && userLoggedIn()}
       {newBlogNotification && newBlogNotify()}
-      {user && createBlog()}
+      {user && userLoggedIn()}
+      <Togglable buttonLabel='Add new blog'>{user && createBlog()}</Togglable>
       {user && blogList()}
     </div>
   )
