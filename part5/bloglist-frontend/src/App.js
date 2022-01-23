@@ -10,6 +10,10 @@ const App = () => {
   const [user, setUser] = useState(null)
   // const [errorMessage, setErrorMessage] = useState(null)
 
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
+
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs))
   }, [])
@@ -32,6 +36,7 @@ const App = () => {
         password,
       })
       window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
+      blogService.setToken(user.token)
       setUser(user)
       setPassword('')
       setUsername('')
@@ -47,6 +52,12 @@ const App = () => {
     console.log('logged out')
     await window.localStorage.removeItem('loggedBlogAppUser')
     setUser(null)
+  }
+
+  const handleCreate = async (event) => {
+    event.preventDefault()
+    await blogService.create({ title, author, url })
+    await blogService.getAll().then((blogs) => setBlogs(blogs))
   }
 
   const loginForm = () => (
@@ -90,10 +101,47 @@ const App = () => {
       <button onClick={handleLogout}>log out</button>
     </>
   )
+
+  const createBlog = () => (
+    <>
+      <h2>Create new blog</h2>
+      <form onSubmit={handleCreate}>
+        <div>
+          title:{' '}
+          <input
+            type='text'
+            name='Title'
+            value={title}
+            onChange={({ target }) => setTitle(target.value)}
+          />
+        </div>
+        <div>
+          author:{' '}
+          <input
+            type='text'
+            name='Author'
+            value={author}
+            onChange={({ target }) => setAuthor(target.value)}
+          />
+        </div>
+        <div>
+          url:{' '}
+          <input
+            type='text'
+            name='Url'
+            value={url}
+            onChange={({ target }) => setUrl(target.value)}
+          />
+        </div>
+        <button type='submit'>Create</button>
+      </form>
+    </>
+  )
   return (
     <div>
       {!user && loginForm()}
       {user && userLoggedIn()}
+      {user && createBlog()}
       {user && blogList()}
     </div>
   )
