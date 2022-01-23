@@ -14,7 +14,7 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs))
+    handleUpdate()
   }, [])
 
   useEffect(() => {
@@ -25,6 +25,11 @@ const App = () => {
     }
   }, [])
 
+  const handleUpdate = () => {
+    blogService
+      .getAll()
+      .then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)))
+  }
   const handleLogin = async (event) => {
     event.preventDefault()
     console.log('loggin with', username, password)
@@ -81,10 +86,7 @@ const App = () => {
   const blogList = () => (
     <>
       <h2>blogs</h2>
-      <button
-        onClick={() => blogService.getAll().then((blogs) => setBlogs(blogs))}>
-        refresh list
-      </button>
+      <button onClick={() => handleUpdate()}>refresh list</button>
       {blogs.map((blog) => (
         <Blog key={blog.id} blog={blog} />
       ))}
