@@ -12,6 +12,7 @@ const App = () => {
   const [user, setUser] = useState(null)
 
   const [errorMessage, setErrorMessage] = useState(null)
+  const [newBlogNotification, setNewBlogNotification] = React.useState(null)
 
   useEffect(() => {
     handleUpdate()
@@ -24,6 +25,33 @@ const App = () => {
       setUser(user)
     }
   }, [])
+  const handleCreate = async (event, title, author, url) => {
+    if (!window.localStorage.getItem('loggedBlogAppUser')) return null
+
+    event.preventDefault()
+    const { token } = JSON.parse(
+      window.localStorage.getItem('loggedBlogAppUser')
+    )
+    await blogService.setToken(token)
+    await blogService.create({ title, author, url })
+    setNewBlogNotification(`A new blog: ${title} by ${author} is added`)
+    setTimeout(() => {
+      setNewBlogNotification(null)
+    }, 5000)
+    handleUpdate()
+  }
+  const newBlogNotify = () => (
+    <div
+      style={{
+        border: '2px solid green',
+        borderRadius: '2%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignContent: 'center',
+      }}>
+      <h3 style={{ color: 'green' }}>{newBlogNotification}</h3>
+    </div>
+  )
 
   const handleUpdate = () => {
     blogService
@@ -133,11 +161,12 @@ const App = () => {
   return (
     <div>
       {errorMessage && errorNotify()}
+      {newBlogNotification && newBlogNotify()}
       {!user && loginForm()}
       {user && userLoggedIn()}
       {user && (
         <Togglable buttonLabel='Add new blog'>
-          {user && <CreateBlogForm />}
+          {user && <CreateBlogForm handleCreate={handleCreate} />}
         </Togglable>
       )}
       {user && blogList()}
