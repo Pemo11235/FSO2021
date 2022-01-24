@@ -40,4 +40,26 @@ describe('<Blog />', () => {
     expect(container).toHaveTextContent(blog.url)
     expect(container).toHaveTextContent(blog.likes)
   })
+
+  it('click likes correctly', () => {
+    const blog = {
+      id: 'test-id',
+      title: 'test-title',
+      author: 'test-author',
+      url: 'test-url',
+      likes: 99,
+      user: { username: 'test-username' },
+    }
+    const mockHandleLike = jest.fn()
+    const { getByText } = render(
+      <Blog blog={blog} handleLike={mockHandleLike} />
+    )
+    const view = getByText('view')
+    fireEvent.click(view)
+    const like = getByText('Like')
+    fireEvent.click(like)
+    fireEvent.click(like)
+
+    expect(mockHandleLike.mock.calls).toHaveLength(2)
+  })
 })

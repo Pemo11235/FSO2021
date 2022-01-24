@@ -1,6 +1,6 @@
 import React from 'react'
 import blogService from '../services/blogs'
-const Blog = ({ blog }) => {
+const Blog = ({ blog, handleLike }) => {
   const [details, setDetails] = React.useState(false)
 
   const blogStyle = {
@@ -9,12 +9,6 @@ const Blog = ({ blog }) => {
     border: 'solid',
     borderWidth: 1,
     marginBottom: 5,
-  }
-
-  const handleLike = (event) => {
-    event.preventDefault()
-    const { id, newObject } = buildObject()
-    blogService.update(id, newObject)
   }
 
   const canUserDelete = () => {
@@ -30,17 +24,6 @@ const Blog = ({ blog }) => {
     }
   }
 
-  const buildObject = () => ({
-    id: blog.id,
-    newObject: {
-      id: blog.id,
-      title: blog.title,
-      author: blog.author,
-      likes: blog.likes + 1,
-      url: blog.url,
-    },
-  })
-
   return (
     <div style={blogStyle} className={'blog'}>
       <div>
@@ -49,7 +32,8 @@ const Blog = ({ blog }) => {
         {details && (
           <div>
             URL: {blog.url} <br />
-            Likes: {blog.likes} <button onClick={handleLike}>Like</button>
+            Likes: {blog.likes}{' '}
+            <button onClick={(event) => handleLike(event, blog)}>Like</button>
             <br />
             User: {blog.user.username}
             <br />

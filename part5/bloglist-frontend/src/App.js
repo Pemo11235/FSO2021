@@ -30,6 +30,22 @@ const App = () => {
       .getAll()
       .then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)))
   }
+  const handleLike = (event, blog) => {
+    event.preventDefault()
+    const buildObject = () => ({
+      id: blog.id,
+      newObject: {
+        id: blog.id,
+        title: blog.title,
+        author: blog.author,
+        likes: blog.likes + 1,
+        url: blog.url,
+      },
+    })
+    const { id, newObject } = buildObject(blog)
+    blogService.update(id, newObject)
+    handleUpdate()
+  }
   const handleLogin = async (event) => {
     event.preventDefault()
     console.log('loggin with', username, password)
@@ -88,7 +104,7 @@ const App = () => {
       <h2>blogs</h2>
       <button onClick={() => handleUpdate()}>refresh list</button>
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} handleLike={handleLike} />
       ))}
     </>
   )
