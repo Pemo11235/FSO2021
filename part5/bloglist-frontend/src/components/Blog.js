@@ -18,6 +18,7 @@ const Blog = ({ blog }) => {
   }
 
   const canUserDelete = () => {
+    if (!window.localStorage.getItem('loggedBlogAppUser')) return false
     const { username } = JSON.parse(
       window.localStorage.getItem('loggedBlogAppUser')
     )

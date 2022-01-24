@@ -1,10 +1,10 @@
 import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
-import { render } from '@testing-library/react'
+import { render, fireEvent } from '@testing-library/react'
 import Blog from './Blog'
 
 describe('<Blog />', () => {
-  it('renders correctly', () => {
+  it('renders correctly with closed toggle', () => {
     const blog = {
       id: 'test-id',
       title: 'test-title',
@@ -20,5 +20,24 @@ describe('<Blog />', () => {
     expect(container).toHaveTextContent(blog.author)
     expect(container).not.toHaveTextContent(blog.url)
     expect(container).not.toHaveTextContent(blog.likes)
+  })
+  it('renders correctly with open toggle', () => {
+    const blog = {
+      id: 'test-id',
+      title: 'test-title',
+      author: 'test-author',
+      url: 'test-url',
+      likes: 99,
+      user: { username: 'test-username' },
+    }
+    const { container, getByText } = render(<Blog blog={blog} />)
+    const button = getByText('view')
+
+    fireEvent.click(button)
+
+    expect(container).toHaveTextContent(blog.title)
+    expect(container).toHaveTextContent(blog.author)
+    expect(container).toHaveTextContent(blog.url)
+    expect(container).toHaveTextContent(blog.likes)
   })
 })
