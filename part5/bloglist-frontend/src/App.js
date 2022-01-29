@@ -103,7 +103,7 @@ const App = () => {
   }
 
   const loginForm = () => (
-    <form onSubmit={handleLogin}>
+    <form onSubmit={handleLogin} id='login-form'>
       <h2>Log in to application</h2>
       <div>
         username
