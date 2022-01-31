@@ -37,5 +37,11 @@ describe('Blog app', function () {
     it('a new blog can be created', function () {
       cy.createBlog()
     })
+    it('a blog can be view and liked', function () {
+      cy.createBlog()
+      cy.get('#view').click()
+      cy.get('#like').click()
+      cy.contains('Likes: ')
+    })
   })
 })

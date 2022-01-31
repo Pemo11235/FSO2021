@@ -28,12 +28,16 @@ const Blog = ({ blog, handleLike }) => {
     <div style={blogStyle} className={'blog'}>
       <div>
         {blog.title} - {blog.author}
-        <button onClick={() => setDetails(!details)}>view</button>
+        <button id='view' onClick={() => setDetails(!details)}>
+          view
+        </button>
         {details && (
           <div>
             URL: {blog.url} <br />
             Likes: {blog.likes}{' '}
-            <button onClick={(event) => handleLike(event, blog)}>Like</button>
+            <button id='like' onClick={(event) => handleLike(event, blog)}>
+              Like
+            </button>
             <br />
             User: {blog.user.username}
             <br />
