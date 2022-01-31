@@ -1,12 +1,6 @@
 describe('Blog app', function () {
   beforeEach(function () {
-    cy.request('POST', 'http://localhost:3003/api/testing/reset')
-    const user = {
-      name: 'pemo',
-      username: 'pemo',
-      password: 'pemo',
-    }
-    cy.request('POST', 'http://localhost:3003/api/users/', user)
+    cy.createUser('pemo')
     cy.visit('http://localhost:3000')
   })
 
@@ -33,6 +27,15 @@ describe('Blog app', function () {
         .should('contain', 'Wrong credentials')
         .should('have.css', 'border', '2px solid rgb(255, 0, 0)')
       cy.get('#error-text').should('have.css', 'color', 'rgb(255, 0, 0)')
+    })
+  })
+
+  describe('When logged in', function () {
+    beforeEach(function () {
+      cy.login('pemo', 'pemo')
+    })
+    it('a new blog can be created', function () {
+      cy.createBlog()
     })
   })
 })
