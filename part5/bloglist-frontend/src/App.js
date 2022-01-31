@@ -108,6 +108,7 @@ const App = () => {
       <div>
         username
         <input
+          id='username'
           type='text'
           value={username}
           name='Username'
@@ -117,13 +118,16 @@ const App = () => {
       <div>
         password
         <input
+          id='password'
           type='password'
           value={password}
           name='Password'
           onChange={({ target }) => setPassword(target.value)}
         />
       </div>
-      <button type='submit'>login</button>
+      <button id='input-button' type='submit'>
+        login
+      </button>
     </form>
   )
 
@@ -147,6 +151,7 @@ const App = () => {
 
   const errorNotify = () => (
     <div
+      className='error'
       style={{
         border: '2px solid red',
         borderRadius: '2%',
@@ -154,7 +159,9 @@ const App = () => {
         justifyContent: 'center',
         alignContent: 'center',
       }}>
-      <h3 style={{ color: 'red' }}>{errorMessage}</h3>
+      <h3 id='error-text' style={{ color: 'red' }}>
+        {errorMessage}
+      </h3>
     </div>
   )
 
