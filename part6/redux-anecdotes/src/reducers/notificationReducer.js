@@ -1,20 +1,25 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-const notificationAtStart = ['Default Notification']
+const notificationAtStart = ''
 
-const getId = () => (100_000 * Math.random()).toFixed(0)
-
-const asObject = (notification) => ({
-  id: getId(),
-  notification,
-})
-
-const initialState = notificationAtStart.map(asObject)
+const initialState = notificationAtStart
 
 const notificationSlice = createSlice({
   name: 'notifications',
   initialState,
-  reducers: {},
+  reducers: {
+    setNotification: {
+      reducer: (state, action) => {
+        return (state = action.payload)
+      },
+      prepare: (text) => ({
+        payload: text,
+      }),
+    },
+    resetNotification(state) {
+      return (state = '')
+    },
+  },
 })
-
+export const { setNotification, resetNotification } = notificationSlice.actions
 export default notificationSlice.reducer

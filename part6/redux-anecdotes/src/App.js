@@ -1,15 +1,17 @@
-// import { useSelector, useDispatch } from 'react-redux'
 import AnecdoteForm from './components/AnecdoteForm'
 import AnecdoteList from './components/AnecdoteList'
 import Notification from './components/Notification'
+import React from 'react'
 
-const App = () => (
-  <div>
-    <Notification />
-    <h2>Anecdotes</h2>
-    <AnecdoteList />
-    <AnecdoteForm />
-  </div>
-)
+const App = () => {
+  return (
+    <div>
+      <h2>Anecdotes</h2>
+      <Notification />
+      <AnecdoteList />
+      <AnecdoteForm />
+    </div>
+  )
+}
 
 export default App
