@@ -4,6 +4,7 @@ import { createAnecdote } from '../reducers/anecdoteReducer'
 import {
   resetNotification,
   setNotification,
+  writeNotification,
 } from '../reducers/notificationReducer'
 
 const AnecdoteForm = () => {
@@ -14,11 +15,7 @@ const AnecdoteForm = () => {
     event.target.anecdote.value = ''
 
     dispatch(createAnecdote(content))
-
-    dispatch(setNotification('A new anecdote has been created !'))
-    setTimeout(() => {
-      dispatch(resetNotification())
-    }, 5000)
+    dispatch(setNotification(`Created new note: ${content}`, 3))
   }
 
   return (

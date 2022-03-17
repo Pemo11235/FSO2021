@@ -4,6 +4,7 @@ import { updateVote, voteAnecdote } from '../reducers/anecdoteReducer'
 import {
   resetNotification,
   setNotification,
+  writeNotification,
 } from '../reducers/notificationReducer'
 
 const AnecdoteList = () => {
@@ -17,12 +18,9 @@ const AnecdoteList = () => {
     return stateFiltered.sort(({ votes: a }, { votes: b }) => b - a)
   })
 
-  const vote = (id) => {
+  const vote = ({ id, content }) => {
     dispatch(updateVote(id))
-    dispatch(setNotification('You just voted an anecdote !'))
-    setTimeout(() => {
-      dispatch(resetNotification())
-    }, 5000)
+    dispatch(setNotification(`You voted: ${content} `, 5))
   }
 
   return (
@@ -32,7 +30,7 @@ const AnecdoteList = () => {
           <div>{anecdote.content}</div>
           <div>
             has {anecdote.votes}
-            <button onClick={() => vote(anecdote.id)}>vote</button>
+            <button onClick={() => vote(anecdote)}>vote</button>
           </div>
         </div>
       ))}
