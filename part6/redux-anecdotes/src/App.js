@@ -5,16 +5,14 @@ import React from 'react'
 import Filter from './components/Filter'
 import { useDispatch } from 'react-redux'
 import anecdoteService from './reducers/services/anecdoteService'
-import { setAnecdotes } from './reducers/anecdoteReducer'
+import { initializeAnecdotes, setAnecdotes } from './reducers/anecdoteReducer'
 
 const App = () => {
   const dispatch = useDispatch()
 
   React.useEffect(() => {
-    anecdoteService
-      .getAll()
-      .then((anecdotes) => dispatch(setAnecdotes(anecdotes)))
-  }, []) //eslint-disable-line
+    dispatch(initializeAnecdotes())
+  }, [])
 
   return (
     <div>
