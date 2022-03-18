@@ -11,9 +11,9 @@ const Notification = ({ notification }) => {
     backgroundColor: 'lightgreen',
   }
 
-  const showNotification = notification !== ''
+  const showNotification = notification.text !== ''
 
-  return <>{showNotification && <div style={style}>{notification}</div>}</>
+  return <>{showNotification && <div style={style}>{notification.text}</div>}</>
 }
 
 const mapStateToProps = (state) => {
