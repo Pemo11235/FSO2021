@@ -5,6 +5,8 @@ import {
   Routes,
   Route,
   useParams,
+  Navigate,
+  useNavigate,
 } from 'react-router-dom'
 
 const Menu = () => {
@@ -91,6 +93,7 @@ const CreateNew = (props) => {
   const [content, setContent] = useState('')
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
+  const navigate = useNavigate()
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -100,6 +103,7 @@ const CreateNew = (props) => {
       info,
       votes: 0,
     })
+    navigate('/')
   }
 
   return (
@@ -135,7 +139,6 @@ const CreateNew = (props) => {
     </div>
   )
 }
-
 const App = () => {
   const [anecdotes, setAnecdotes] = useState([
     {
@@ -159,6 +162,10 @@ const App = () => {
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000)
     setAnecdotes(anecdotes.concat(anecdote))
+    setNotification(`A new anecdote : "${anecdote.content}" has been created !`)
+    setTimeout(() => {
+      setNotification('')
+    }, 5000)
   }
 
   const anecdoteById = (id) => anecdotes.find((a) => a.id === id)
@@ -178,7 +185,7 @@ const App = () => {
     <Router>
       <h1>Software anecdotes</h1>
       <Menu />
-
+      {notification && <p>{notification}</p>}
       <Routes>
         <Route
           path='/anecdotes/:id'
