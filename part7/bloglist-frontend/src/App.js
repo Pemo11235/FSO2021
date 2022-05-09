@@ -13,7 +13,6 @@ import {
 import { blogSelector, getAllBlogsAndUpdateState } from './slices/blogSlice'
 
 const App = () => {
-  // const [blogs, setBlogs] = useState([])
   const blogs = useSelector(blogSelector)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -67,22 +66,6 @@ const App = () => {
     )
   }
 
-  const handleLike = (event, blog) => {
-    event.preventDefault()
-    const buildObject = () => ({
-      id: blog.id,
-      newObject: {
-        id: blog.id,
-        title: blog.title,
-        author: blog.author,
-        likes: blog.likes + 1,
-        url: blog.url,
-      },
-    })
-    const { id, newObject } = buildObject(blog)
-    blogService.update(id, newObject)
-    dispatch(getAllBlogsAndUpdateState())
-  }
   const handleLogin = async event => {
     event.preventDefault()
     console.log('loggin with', username, password)
@@ -150,7 +133,7 @@ const App = () => {
         refresh list
       </button>
       {blogs.map(blog => (
-        <Blog key={blog.id} blog={blog} handleLike={handleLike} />
+        <Blog key={blog.id} blog={blog} />
       ))}
     </>
   )

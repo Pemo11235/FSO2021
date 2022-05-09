@@ -1,7 +1,10 @@
 import React from 'react'
 import blogService from '../services/blogs'
-const Blog = ({ blog, handleLike }) => {
+import { useDispatch } from 'react-redux'
+import { getAllBlogsAndUpdateState } from '../slices/blogSlice'
+const Blog = ({ blog }) => {
   const [details, setDetails] = React.useState(false)
+  const dispatch = useDispatch()
 
   const blogStyle = {
     paddingTop: 10,
@@ -18,10 +21,27 @@ const Blog = ({ blog, handleLike }) => {
     )
     return blog.user.username === username
   }
-  const handleRemove = () => {
+  const handleRemove = async () => {
     if (window.confirm(`Remove blog: ${blog.title} by ${blog.author} ? `)) {
-      blogService.remove(blog.id)
+      await blogService.remove(blog.id)
+      dispatch(getAllBlogsAndUpdateState())
     }
+  }
+  const handleLike = (event, blog) => {
+    event.preventDefault()
+    const buildObject = () => ({
+      id: blog.id,
+      newObject: {
+        id: blog.id,
+        title: blog.title,
+        author: blog.author,
+        likes: blog.likes + 1,
+        url: blog.url,
+      },
+    })
+    const { id, newObject } = buildObject(blog)
+    blogService.update(id, newObject)
+    dispatch(getAllBlogsAndUpdateState())
   }
 
   return (
@@ -35,7 +55,7 @@ const Blog = ({ blog, handleLike }) => {
           <div>
             URL: {blog.url} <br />
             Likes: {blog.likes}{' '}
-            <button id="like" onClick={(event) => handleLike(event, blog)}>
+            <button id="like" onClick={event => handleLike(event, blog)}>
               Like
             </button>
             <br />
