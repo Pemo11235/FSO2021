@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import userService from '../services/users'
 
 export const userSlice = createSlice({
   name: 'user',
@@ -8,6 +9,7 @@ export const userSlice = createSlice({
       username: '',
       password: '',
     },
+    allUsers: [],
   },
   reducers: {
     setUser: (state, action) => {
@@ -22,11 +24,21 @@ export const userSlice = createSlice({
     resetUser: state => {
       state.user = null
     },
+    setAllUsers: (state, action) => {
+      state.allUsers = action.payload
+    },
   },
 })
 
-export const { setUser, setUsername, setPassword, resetUser } =
+export const { setUser, setUsername, setPassword, resetUser, setAllUsers } =
   userSlice.actions
+
+export const asyncGetAllUsers = () => dispatch => {
+  userService.getAll().then(users => {
+    dispatch(setAllUsers(users))
+  })
+}
 export const userSelector = state => state.user.user
 export const credentialSelector = state => state.user.credential
+export const allUsersSelector = state => state.user.allUsers
 export default userSlice.reducer

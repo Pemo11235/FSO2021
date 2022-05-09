@@ -1,35 +1,25 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import Blog from './components/Blog'
 import CreateBlogForm from './components/CreateBlogForm'
 import Togglable from './components/Toggable'
-import blogService from './services/blogs'
-import loginService from './services/login'
-import {
-  setNotification,
-  asyncResetNotification,
-  notificationSelector,
-} from './slices/notifySlice'
+import { notificationSelector } from './slices/notifySlice'
 import { blogSelector, getAllBlogsAndUpdateState } from './slices/blogSlice'
-import {
-  userSelector,
-  setUser,
-  resetUser,
-  credentialSelector,
-  setUsername,
-  setPassword,
-} from './slices/userSlice'
-
+import { userSelector, setUser } from './slices/userSlice'
+import LoginForm from './components/LoginForm'
+import BlogList from './components/BlogList'
+import Notification from './components/Notification'
+import UserInfo from './components/UserInfo'
+import { Link } from 'react-router-dom'
 const App = () => {
   const blogs = useSelector(blogSelector)
   const user = useSelector(userSelector)
-  const [notification, notificationType] = useSelector(notificationSelector)
-  const { username, password } = useSelector(credentialSelector)
+  const [notificationType] = useSelector(notificationSelector)
 
   const dispatch = useDispatch()
+
   useEffect(() => {
     dispatch(getAllBlogsAndUpdateState())
-  }, [])
+  }, [blogs])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
@@ -38,131 +28,27 @@ const App = () => {
       dispatch(setUser(user))
     }
   }, [])
-  const handleCreate = async (event, title, author, url) => {
-    if (!window.localStorage.getItem('loggedBlogAppUser')) return null
 
-    event.preventDefault()
-    const { token } = JSON.parse(
-      window.localStorage.getItem('loggedBlogAppUser')
-    )
-    await blogService.setToken(token)
-    await blogService.create({ title, author, url })
-    dispatch(
-      setNotification({
-        notification: `A new blog: ${title} by ${author} is added`,
-        notificationType: 'success',
-      })
-    )
-    dispatch(asyncResetNotification())
-    dispatch(getAllBlogsAndUpdateState())
-  }
-  const showNotification = () => {
-    const colorNotification = notificationType === 'success' ? 'green' : 'red'
-    const notificationStyle = {
-      border: `2px solid ${colorNotification}`,
-      borderRadius: '2%',
-      display: 'flex',
-      justifyContent: 'center',
-      alignContent: 'center',
-    }
-    return (
-      <div style={notificationStyle}>
-        <h3 style={{ color: colorNotification }}>{notification}</h3>
-      </div>
-    )
-  }
-
-  const handleLogin = async event => {
-    event.preventDefault()
-    console.log('loggin with', username, password)
-
-    try {
-      const user = await loginService.login({
-        username,
-        password,
-      })
-      window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
-      blogService.setToken(user.token)
-      dispatch(setUser(user))
-      dispatch(setUsername(''))
-      dispatch(setPassword(''))
-    } catch (exception) {
-      dispatch(
-        setNotification({
-          notification: 'Wrong username or password',
-          notificationType: 'error',
-        })
-      )
-      dispatch(asyncResetNotification())
-    }
-  }
-
-  const handleLogout = async () => {
-    console.log('logged out')
-    await window.localStorage.removeItem('loggedBlogAppUser')
-    dispatch(resetUser())
-  }
-
-  const loginForm = () => (
-    <form onSubmit={handleLogin} id="login-form">
-      <h2>Log in to application</h2>
-      <div>
-        username
-        <input
-          id="username"
-          type="text"
-          value={username}
-          name="Username"
-          onChange={({ target }) => dispatch(setUsername(target.value))}
-        />
-      </div>
-      <div>
-        password
-        <input
-          id="password"
-          type="password"
-          value={password}
-          name="Password"
-          onChange={({ target }) => dispatch(setPassword(target.value))}
-        />
-      </div>
-      <button id="input-button" type="submit">
-        login
-      </button>
-    </form>
-  )
-
-  const blogList = () => (
-    <>
-      <h2>blogs</h2>
-      <button onClick={() => dispatch(getAllBlogsAndUpdateState())}>
-        refresh list
-      </button>
-      {blogs.map(blog => (
-        <Blog key={blog.id} blog={blog} />
-      ))}
-    </>
-  )
-
-  const userLoggedIn = () => (
-    <>
-      <h2>list</h2>
-      <h3>{user.username} logged in</h3>
-      <button onClick={handleLogout}>log out</button>
-    </>
-  )
-
+  const padding = { padding: '5px' }
   return (
     <div>
-      {notificationType !== null && showNotification()}
-      {!user && loginForm()}
-      {user && userLoggedIn()}
+      <div>
+        <Link style={padding} to="/">
+          Home
+        </Link>
+        <Link style={padding} to="/users">
+          Users
+        </Link>
+      </div>
+      {notificationType !== null && <Notification />}
+      {!user && <LoginForm />}
+      {user && <UserInfo />}
       {user && (
         <Togglable buttonLabel="Add new blog">
-          {user && <CreateBlogForm handleCreate={handleCreate} />}
+          {user && <CreateBlogForm />}
         </Togglable>
       )}
-      {user && blogList()}
+      {user && <BlogList />}
     </div>
   )
 }

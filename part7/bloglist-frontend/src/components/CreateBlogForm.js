@@ -1,14 +1,38 @@
 import React from 'react'
+import { useDispatch } from 'react-redux'
+import blogService from '../services/blogs'
+import { getAllBlogsAndUpdateState } from '../slices/blogSlice'
+import { asyncResetNotification, setNotification } from '../slices/notifySlice'
 
-const CreateBlogForm = ({ handleCreate }) => {
+const CreateBlogForm = () => {
   const [title, setTitle] = React.useState('')
   const [author, setAuthor] = React.useState('')
   const [url, setUrl] = React.useState('')
+  const dispatch = useDispatch()
+
+  const handleCreate = async (event, title, author, url) => {
+    if (!window.localStorage.getItem('loggedBlogAppUser')) return null
+
+    event.preventDefault()
+    const { token } = JSON.parse(
+      window.localStorage.getItem('loggedBlogAppUser')
+    )
+    await blogService.setToken(token)
+    await blogService.create({ title, author, url })
+    dispatch(
+      setNotification({
+        notification: `A new blog: ${title} by ${author} is added`,
+        notificationType: 'success',
+      })
+    )
+    dispatch(asyncResetNotification())
+    dispatch(getAllBlogsAndUpdateState())
+  }
 
   return (
     <>
       <h1>Create new blog</h1>
-      <form onSubmit={(event) => handleCreate(event, title, author, url)}>
+      <form onSubmit={event => handleCreate(event, title, author, url)}>
         <div>
           title:{' '}
           <input
