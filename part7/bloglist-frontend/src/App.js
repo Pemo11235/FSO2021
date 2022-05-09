@@ -10,9 +10,11 @@ import {
   asyncResetNotification,
   notificationSelector,
 } from './slices/notifySlice'
+import { blogSelector, getAllBlogsAndUpdateState } from './slices/blogSlice'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
+  // const [blogs, setBlogs] = useState([])
+  const blogs = useSelector(blogSelector)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -21,7 +23,7 @@ const App = () => {
   const [notification, notificationType] = useSelector(notificationSelector)
 
   useEffect(() => {
-    handleUpdate()
+    dispatch(getAllBlogsAndUpdateState())
   }, [])
 
   useEffect(() => {
@@ -47,7 +49,7 @@ const App = () => {
       })
     )
     dispatch(asyncResetNotification())
-    handleUpdate()
+    dispatch(getAllBlogsAndUpdateState())
   }
   const showNotification = () => {
     const colorNotification = notificationType === 'success' ? 'green' : 'red'
@@ -65,11 +67,6 @@ const App = () => {
     )
   }
 
-  const handleUpdate = () => {
-    blogService
-      .getAll()
-      .then(blogs => setBlogs(blogs.sort((a, b) => b.likes - a.likes)))
-  }
   const handleLike = (event, blog) => {
     event.preventDefault()
     const buildObject = () => ({
@@ -84,7 +81,7 @@ const App = () => {
     })
     const { id, newObject } = buildObject(blog)
     blogService.update(id, newObject)
-    handleUpdate()
+    dispatch(getAllBlogsAndUpdateState())
   }
   const handleLogin = async event => {
     event.preventDefault()
@@ -149,7 +146,9 @@ const App = () => {
   const blogList = () => (
     <>
       <h2>blogs</h2>
-      <button onClick={() => handleUpdate()}>refresh list</button>
+      <button onClick={() => dispatch(getAllBlogsAndUpdateState())}>
+        refresh list
+      </button>
       {blogs.map(blog => (
         <Blog key={blog.id} blog={blog} handleLike={handleLike} />
       ))}
