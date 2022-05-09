@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Blog from './components/Blog'
 import CreateBlogForm from './components/CreateBlogForm'
@@ -11,16 +11,22 @@ import {
   notificationSelector,
 } from './slices/notifySlice'
 import { blogSelector, getAllBlogsAndUpdateState } from './slices/blogSlice'
+import {
+  userSelector,
+  setUser,
+  resetUser,
+  credentialSelector,
+  setUsername,
+  setPassword,
+} from './slices/userSlice'
 
 const App = () => {
   const blogs = useSelector(blogSelector)
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
+  const user = useSelector(userSelector)
+  const [notification, notificationType] = useSelector(notificationSelector)
+  const { username, password } = useSelector(credentialSelector)
 
   const dispatch = useDispatch()
-  const [notification, notificationType] = useSelector(notificationSelector)
-
   useEffect(() => {
     dispatch(getAllBlogsAndUpdateState())
   }, [])
@@ -29,7 +35,7 @@ const App = () => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      setUser(user)
+      dispatch(setUser(user))
     }
   }, [])
   const handleCreate = async (event, title, author, url) => {
@@ -77,9 +83,9 @@ const App = () => {
       })
       window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
       blogService.setToken(user.token)
-      setUser(user)
-      setPassword('')
-      setUsername('')
+      dispatch(setUser(user))
+      dispatch(setUsername(''))
+      dispatch(setPassword(''))
     } catch (exception) {
       dispatch(
         setNotification({
@@ -94,7 +100,7 @@ const App = () => {
   const handleLogout = async () => {
     console.log('logged out')
     await window.localStorage.removeItem('loggedBlogAppUser')
-    setUser(null)
+    dispatch(resetUser())
   }
 
   const loginForm = () => (
@@ -107,7 +113,7 @@ const App = () => {
           type="text"
           value={username}
           name="Username"
-          onChange={({ target }) => setUsername(target.value)}
+          onChange={({ target }) => dispatch(setUsername(target.value))}
         />
       </div>
       <div>
@@ -117,7 +123,7 @@ const App = () => {
           type="password"
           value={password}
           name="Password"
-          onChange={({ target }) => setPassword(target.value)}
+          onChange={({ target }) => dispatch(setPassword(target.value))}
         />
       </div>
       <button id="input-button" type="submit">
