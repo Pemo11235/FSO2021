@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import Blog from './components/Blog'
 import CreateBlogForm from './components/CreateBlogForm'
 import Togglable from './components/Toggable'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import {
+  setNotification,
+  asyncResetNotification,
+  notificationSelector,
+} from './slices/notifySlice'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -11,8 +17,8 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
-  const [errorMessage, setErrorMessage] = useState(null)
-  const [newBlogNotification, setNewBlogNotification] = React.useState(null)
+  const dispatch = useDispatch()
+  const [notification, notificationType] = useSelector(notificationSelector)
 
   useEffect(() => {
     handleUpdate()
@@ -34,30 +40,35 @@ const App = () => {
     )
     await blogService.setToken(token)
     await blogService.create({ title, author, url })
-    setNewBlogNotification(`A new blog: ${title} by ${author} is added`)
-    setTimeout(() => {
-      setNewBlogNotification(null)
-    }, 5000)
+    dispatch(
+      setNotification({
+        notification: `A new blog: ${title} by ${author} is added`,
+        notificationType: 'success',
+      })
+    )
+    dispatch(asyncResetNotification())
     handleUpdate()
   }
-  const newBlogNotify = () => (
-    <div
-      style={{
-        border: '2px solid green',
-        borderRadius: '2%',
-        display: 'flex',
-        justifyContent: 'center',
-        alignContent: 'center',
-      }}
-    >
-      <h3 style={{ color: 'green' }}>{newBlogNotification}</h3>
-    </div>
-  )
+  const showNotification = () => {
+    const colorNotification = notificationType === 'success' ? 'green' : 'red'
+    const notificationStyle = {
+      border: `2px solid ${colorNotification}`,
+      borderRadius: '2%',
+      display: 'flex',
+      justifyContent: 'center',
+      alignContent: 'center',
+    }
+    return (
+      <div style={notificationStyle}>
+        <h3 style={{ color: colorNotification }}>{notification}</h3>
+      </div>
+    )
+  }
 
   const handleUpdate = () => {
     blogService
       .getAll()
-      .then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)))
+      .then(blogs => setBlogs(blogs.sort((a, b) => b.likes - a.likes)))
   }
   const handleLike = (event, blog) => {
     event.preventDefault()
@@ -75,7 +86,7 @@ const App = () => {
     blogService.update(id, newObject)
     handleUpdate()
   }
-  const handleLogin = async (event) => {
+  const handleLogin = async event => {
     event.preventDefault()
     console.log('loggin with', username, password)
 
@@ -90,10 +101,13 @@ const App = () => {
       setPassword('')
       setUsername('')
     } catch (exception) {
-      setErrorMessage('Wrong credentials')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      dispatch(
+        setNotification({
+          notification: 'Wrong username or password',
+          notificationType: 'error',
+        })
+      )
+      dispatch(asyncResetNotification())
     }
   }
 
@@ -136,7 +150,7 @@ const App = () => {
     <>
       <h2>blogs</h2>
       <button onClick={() => handleUpdate()}>refresh list</button>
-      {blogs.map((blog) => (
+      {blogs.map(blog => (
         <Blog key={blog.id} blog={blog} handleLike={handleLike} />
       ))}
     </>
@@ -150,27 +164,9 @@ const App = () => {
     </>
   )
 
-  const errorNotify = () => (
-    <div
-      className="error"
-      style={{
-        border: '2px solid red',
-        borderRadius: '2%',
-        display: 'flex',
-        justifyContent: 'center',
-        alignContent: 'center',
-      }}
-    >
-      <h3 id="error-text" style={{ color: 'red' }}>
-        {errorMessage}
-      </h3>
-    </div>
-  )
-
   return (
     <div>
-      {errorMessage && errorNotify()}
-      {newBlogNotification && newBlogNotify()}
+      {notificationType !== null && showNotification()}
       {!user && loginForm()}
       {user && userLoggedIn()}
       {user && (
