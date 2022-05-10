@@ -1,5 +1,7 @@
 const { ApolloServer, gql } = require('apollo-server')
 
+const { v1: uuid } = require('uuid')
+
 let authors = [
   {
     name: 'Robert Martin',
@@ -104,6 +106,14 @@ const typeDefs = gql`
     id: ID
     bookCount: Int
   }
+  type Mutation {
+    addBook(
+      title: String!
+      published: Int!
+      author: String!
+      genres: [String]
+    ): Book
+  }
 `
 
 const resolvers = {
@@ -130,6 +140,16 @@ const resolvers = {
     id: (root) => root.id,
     bookCount: (root) =>
       books.filter((book) => book.author === root.name).length,
+  },
+  Mutation: {
+    addBook: (root, args) => {
+      if (!books.find((book) => book.author === args.author)) {
+        authors.push({ name: args.author, id: uuid() })
+      }
+      const book = { ...args, id: uuid() }
+      books.push(book)
+      return book
+    },
   },
 }
 
