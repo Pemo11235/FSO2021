@@ -76,7 +76,10 @@ blogsRouter.put("/:id/comments", async (request, response) => {
 
   const blogToUpdate = await Blog.findById(blogID);
 
-  const blogObj = { comments: commentsToPut.comments, ...blogToUpdate };
+  const blogObj = {
+    comments: blogToUpdate.comments.concat(commentsToPut.comments),
+    ...blogToUpdate,
+  };
   const blogJSON = new Blog(blogObj).toJSON();
   delete blogJSON.id;
 
