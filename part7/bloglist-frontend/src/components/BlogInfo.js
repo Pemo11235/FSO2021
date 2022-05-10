@@ -12,6 +12,8 @@ const BlogInfo = () => {
 
   const dispatch = useDispatch()
 
+  const [comment, setComment] = React.useState('')
+
   if (!blogToShow) return <Navigate replace to="/" />
 
   const canUserDelete = () => {
@@ -49,6 +51,11 @@ const BlogInfo = () => {
     dispatch(getAllBlogsAndUpdateState())
   }
 
+  const handleAddComment = async () => {
+    await blogService.addComment(blogToShow.id, comment)
+    dispatch(getAllBlogsAndUpdateState())
+  }
+
   return (
     <div>
       <NavBar />
@@ -67,6 +74,30 @@ const BlogInfo = () => {
             User: {blogToShow.user.username}
             <br />
             {canUserDelete() && <button onClick={handleRemove}>remove</button>}
+          </div>
+          <div>
+            <h3>comments</h3>
+            <form onSubmit={handleAddComment}>
+              <div>
+                <input
+                  id="comment"
+                  type="text"
+                  name="Comment"
+                  value={comment}
+                  onChange={e => setComment(e.target.value)}
+                />
+                <button id="submit" type="submit">
+                  Add comment
+                </button>
+              </div>
+            </form>
+            {blogToShow.comments && (
+              <ul>
+                {blogToShow.comments.map(comment => (
+                  <li key={comment}>{comment}</li>
+                ))}
+              </ul>
+            )}
           </div>
         </>
       )}

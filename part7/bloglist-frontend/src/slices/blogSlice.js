@@ -17,5 +17,7 @@ export const getAllBlogsAndUpdateState = () => dispatch => {
     .getAll()
     .then(blogs => dispatch(setBlogs(blogs.sort((a, b) => b.likes - a.likes))))
 }
+
+
 export const blogSelector = state => state.blog.blog
 export default blogSlice.reducer

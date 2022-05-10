@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import CreateBlogForm from './components/CreateBlogForm'
-import Togglable from './components/Toggable'
 import { blogSelector, getAllBlogsAndUpdateState } from './slices/blogSlice'
 import { userSelector } from './slices/userSlice'
 import BlogList from './components/BlogList'
@@ -19,11 +17,6 @@ const App = () => {
   return (
     <div>
       <NavBar />
-      {user && (
-        <Togglable buttonLabel="Add new blog">
-          {user && <CreateBlogForm />}
-        </Togglable>
-      )}
       {user && <BlogList />}
     </div>
   )
