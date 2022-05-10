@@ -6,14 +6,16 @@ import store from './store'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import AllUserStats from './components/AllUserStats'
 import UserStats from './components/UserStats'
+import BlogInfo from './components/BlogInfo'
 
 ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
       <Routes>
-        <Route path="/users/:id" element={<UserStats />} />
         <Route path="/" element={<App />} />
         <Route path="/users" element={<AllUserStats />} />
+        <Route path="/users/:id" element={<UserStats />} />
+        <Route path="/blogs/:id" element={<BlogInfo />} />
       </Routes>
     </BrowserRouter>
   </Provider>,

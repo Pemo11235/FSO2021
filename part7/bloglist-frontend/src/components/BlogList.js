@@ -1,7 +1,7 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 import { blogSelector, getAllBlogsAndUpdateState } from '../slices/blogSlice'
-import Blog from './Blog'
 const BlogList = () => {
   const blogs = useSelector(blogSelector)
   const dispatch = useDispatch()
@@ -13,7 +13,11 @@ const BlogList = () => {
         refresh list
       </button>
       {blogs.map(blog => (
-        <Blog key={blog.id} blog={blog} />
+        <li key={blog.id}>
+          <Link to={`/blogs/${blog.id}`}>
+            {blog.title} - {blog.author}
+          </Link>
+        </li>
       ))}
     </>
   )
