@@ -7,6 +7,11 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import AllUserStats from './components/AllUserStats'
 import UserStats from './components/UserStats'
 import BlogInfo from './components/BlogInfo'
+import '@fontsource/roboto/300.css'
+import '@fontsource/roboto/400.css'
+import '@fontsource/roboto/500.css'
+import '@fontsource/roboto/700.css'
+
 
 ReactDOM.render(
   <Provider store={store}>

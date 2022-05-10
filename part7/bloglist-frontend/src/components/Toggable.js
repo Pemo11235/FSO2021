@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Button, Container } from '@mui/material'
 
 const Togglable = ({ buttonLabel, children }) => {
   const [visible, setVisible] = React.useState(false)
@@ -12,17 +13,27 @@ const Togglable = ({ buttonLabel, children }) => {
   }
 
   return (
-    <div>
+    <Container>
       <div style={hideWhenVisible}>
-        <button id="open-create-blog-form" onClick={toggleVisibility}>
+        <Button
+          variant="contained"
+          id="open-create-blog-form"
+          onClick={toggleVisibility}
+        >
           {buttonLabel}
-        </button>
+        </Button>
       </div>
       <div style={showWhenVisible}>
         {children}
-        <button onClick={toggleVisibility}>cancel</button>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={toggleVisibility}
+        >
+          Cancel
+        </Button>
       </div>
-    </div>
+    </Container>
   )
 }
 

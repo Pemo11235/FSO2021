@@ -6,19 +6,11 @@ import { setUser, userSelector } from '../slices/userSlice'
 import LoginForm from './LoginForm'
 import Notification from './Notification'
 import UserInfo from './UserInfo'
-
+import { AppBar, Toolbar, Typography } from '@mui/material'
 const NavBar = () => {
-  const padding = { padding: '5px' }
   const [notificationType] = useSelector(notificationSelector)
   const user = useSelector(userSelector)
   const dispatch = useDispatch()
-  const navBarStyle = {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    backgroundColor: '#555555',
-  }
 
   React.useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
@@ -29,19 +21,19 @@ const NavBar = () => {
   }, [])
 
   return (
-    <div>
-      <div style={navBarStyle}>
-        <Link style={padding} to="/">
-          Home
-        </Link>
-        <Link style={padding} to="/users">
-          Users
-        </Link>
+    <AppBar position="static">
+      <Toolbar variant="dense">
+        <Typography variant="h6" color="inherit" sx={{ flexGrow: 1 }}>
+          <Link to="/">Home</Link>
+        </Typography>
+        <Typography variant="h6" color="inherit" sx={{ flexGrow: 0 }}>
+          <Link to="/users">Users</Link>
+        </Typography>
         {user && <UserInfo />}
-      </div>
+      </Toolbar>
       {notificationType !== null && <Notification />}
       {!user && <LoginForm />}
-    </div>
+    </AppBar>
   )
 }
 

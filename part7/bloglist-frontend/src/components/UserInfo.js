@@ -1,3 +1,4 @@
+import { Typography, Button } from '@mui/material'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { resetUser, userSelector } from '../slices/userSlice'
@@ -13,18 +14,19 @@ const UserInfo = () => {
   const userInfoStyle = {
     display: 'flex',
     flexDirection: 'row',
-    border: '1px solid black',
     borderRadius: '5px',
-    color: 'white',
-    backgroundColor: '#212121',
     height: 'min-content',
     margin: '0 0 0 20px',
     padding: '5px',
   }
   return (
     <div style={userInfoStyle}>
-      <h5>{user.username} logged in</h5>
-      <button onClick={handleLogout}>log out</button>
+      <Typography variant="h6" color="inherit" sx={{ color: 'white' }}>
+        <h5>{user.username} logged in</h5>
+      </Typography>
+      <Button variant="text" color="secondary" onClick={handleLogout}>
+        Log Out
+      </Button>
     </div>
   )
 }
