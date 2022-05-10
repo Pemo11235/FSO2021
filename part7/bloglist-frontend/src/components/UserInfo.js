@@ -10,12 +10,22 @@ const UserInfo = () => {
     await window.localStorage.removeItem('loggedBlogAppUser')
     dispatch(resetUser())
   }
+  const userInfoStyle = {
+    display: 'flex',
+    flexDirection: 'row',
+    border: '1px solid black',
+    borderRadius: '5px',
+    color: 'white',
+    backgroundColor: '#212121',
+    height: 'min-content',
+    margin: '0 0 0 20px',
+    padding: '5px',
+  }
   return (
-    <>
-      <h2>list</h2>
-      <h3>{user.username} logged in</h3>
+    <div style={userInfoStyle}>
+      <h5>{user.username} logged in</h5>
       <button onClick={handleLogout}>log out</button>
-    </>
+    </div>
   )
 }
 
