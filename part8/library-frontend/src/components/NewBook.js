@@ -17,7 +17,7 @@ const NewBook = (props) => {
     return null
   }
 
-  const submit = async (event) => {
+  const submit = (event) => {
     event.preventDefault()
 
     createBook({
