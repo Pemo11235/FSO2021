@@ -1,4 +1,4 @@
-const { ApolloServer, gql } = require('apollo-server')
+const { ApolloServer, gql, UserInputError } = require('apollo-server')
 const { default: mongoose } = require('mongoose')
 const Books = require('./models/Book')
 const Authors = require('./models/Author')
@@ -91,18 +91,35 @@ const resolvers = {
       let newAuthor
       if (!authorExist) {
         newAuthor = new Author({ name: args.author, born: null })
-        newAuthor.save()
+        if (newAuthor.name.length < 4) {
+          throw new UserInputError('Author name too short ! Min 4 ')
+        }
+        await newAuthor.save()
       }
       const book = new Book({
         ...args,
         author: authorExist ? authorExist : newAuthor,
       })
-      return book.save()
+
+      if (book.title.length < 2) {
+        throw new UserInputError('Book title too short ! Min 2')
+      }
+      try {
+        await book.save()
+      } catch (e) {
+        throw new UserInputError(e.message, { invalidArgs: args })
+      }
+      return book
     },
     editAuthor: async (root, args) => {
       const authorToUpdate = await Author.findOne({ name: args.name })
       authorToUpdate.born = args.setBornTo
-      return authorToUpdate.save()
+      try {
+        await authorToUpdate.save()
+      } catch (e) {
+        throw new UserInputError(e.message, { invalidArgs: args })
+      }
+      return authorToUpdate
     },
   },
 }
