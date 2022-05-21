@@ -73,18 +73,21 @@ const resolvers = {
     bookCount: async () => Books.collection.countDocuments(),
     authorCount: async () => Authors.collection.countDocuments(),
     allBooks: async (root, args) => {
-      if (!args.author && !args.genre) return Books.find({})
+      if (!args.author && !args.genre)
+        return await Books.find({}).populate('author')
       if (args.author && args.genre) {
         const author = await Authors.findOne({ name: args.author })
-        const books = await Books.find({
+        const booksGenres = await Books.find({
           author,
           genres: { $in: [args.genre] },
-        })
+        }).populate('author')
         return books
       }
       if (args.author) {
         const author = await Authors.findOne({ name: args.author })
-        const books = await Books.find({ author })
+        const books = await Books.find({
+          name: author.name,
+        }).populate('author')
         return books
       }
       if (args.genre) {
@@ -101,14 +104,16 @@ const resolvers = {
     name: (root) => root.name,
     born: (root) => root.born,
     id: (root) => root.id,
-    bookCount: (root) => Books.find({ name: root.name }).countDocuments(),
+    bookCount: async (root) => {
+      const books = await Books.find({ name: root.name }).populate('author')
+      return books.length
+    },
   },
   Mutation: {
     addBook: async (root, args, context) => {
       const authorExist = await Authors.findOne({ name: args.author })
       const currentUser = context.currentUser
       let newAuthor
-      console.log(currentUser)
 
       if (!currentUser) {
         throw new AuthenticationError('not authenticated')
