@@ -7,7 +7,6 @@ const Books = ({ show }) => {
 
   if (!show) return null
 
-  console.log(books)
   return (
     <>
       {loading && <div>loading...</div>}
