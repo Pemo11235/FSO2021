@@ -21,7 +21,7 @@ const Login = ({ show, setToken, setPage }) => {
     event.preventDefault()
     login({ variables: { username, password } })
     resetState()
-    setPage('authors')
+    // setPage('authors')
   }
 
   useEffect(() => {

@@ -55,3 +55,25 @@ export const EDIT_AUTHOR = gql`
     }
   }
 `
+
+export const ME = gql`
+  query me {
+    me {
+      username
+      favoriteGenre
+    }
+  }
+`
+
+export const GET_BOOK_BY_GENRE = gql`
+  query allBooks($genre: String) {
+    allBooks(genre: $genre) {
+      title
+      author {
+        name
+      }
+      published
+      genres
+    }
+  }
+`

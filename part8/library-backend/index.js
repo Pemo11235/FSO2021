@@ -49,7 +49,7 @@ const typeDefs = gql`
   }
   type User {
     username: String!
-    favoriteGenre: String!
+    favoriteGenre: String
     id: ID!
   }
   type Token {
@@ -91,7 +91,9 @@ const resolvers = {
         return books
       }
       if (args.genre) {
-        const books = await Books.find({ genres: { $in: [args.genre] } })
+        const books = await Books.find({
+          genres: { $in: [args.genre] },
+        }).populate('author')
         return books
       }
     },
@@ -181,12 +183,12 @@ const resolvers = {
     },
   },
 }
-
 const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: async ({ req }) => {
     const auth = req ? req.headers.authorization : null
+    console.log(auth)
     if (auth && auth.toLowerCase().startsWith('bearer ')) {
       const decodedToken = await jwt.verify(auth.substring(7), JWT_SECRET)
       const currentUser = await User.findById(decodedToken.id)
