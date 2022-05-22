@@ -77,3 +77,11 @@ export const GET_BOOK_BY_GENRE = gql`
     }
   }
 `
+
+export const GET_ALL_BOOKS_GENRES = gql`
+  query {
+    allBooks {
+      genres
+    }
+  }
+`

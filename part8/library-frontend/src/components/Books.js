@@ -1,13 +1,14 @@
 import { useQuery } from '@apollo/client'
 import { useState } from 'react'
-import { ALL_BOOKS } from '../queries'
+import { ALL_BOOKS, GET_ALL_BOOKS_GENRES } from '../queries'
 
 const Books = ({ show }) => {
   const { data, loading } = useQuery(ALL_BOOKS)
   const [filterByGenre, setFilterByGenre] = useState('ALL')
+  const { data: dataGenres } = useQuery(GET_ALL_BOOKS_GENRES)
 
   const books = data?.allBooks
-  const booksByGenres = books && getAllBooksGenres(books)
+  const booksByGenres = books && getAllBooksGenres(dataGenres?.allBooks)
 
   const isBookGenresAllowed = (book) => {
     if (filterByGenre === 'ALL') return true

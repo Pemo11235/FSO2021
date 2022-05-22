@@ -11,7 +11,6 @@ const Recommend = ({ show }) => {
       variables: { genre: favoriteGenre },
     }
   )
-  console.log(booksByGenre.allBooks)
 
   if (!show) {
     return null
@@ -32,7 +31,7 @@ const Recommend = ({ show }) => {
             <th>published</th>
           </tr>
           {!loadingBooksByGenre &&
-            booksByGenre.allBooks.map((a) => (
+            booksByGenre?.allBooks.map((a) => (
               <tr key={a.title}>
                 <td>{a.title}</td>
                 <td>{a.author.name}</td>
