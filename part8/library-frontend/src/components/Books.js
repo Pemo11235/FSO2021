@@ -1,11 +1,25 @@
 import { useQuery } from '@apollo/client'
+import { useState } from 'react'
 import { ALL_BOOKS } from '../queries'
 
 const Books = ({ show }) => {
   const { data, loading } = useQuery(ALL_BOOKS)
-  const books = data?.allBooks
+  const [filterByGenre, setFilterByGenre] = useState('ALL')
 
-  if (!show) return null
+  const books = data?.allBooks
+  const booksByGenres = books && getAllBooksGenres(books)
+
+  const isBookGenresAllowed = (book) => {
+    if (filterByGenre === 'ALL') return true
+    return book.genres.includes(filterByGenre)
+  }
+  const onGenreFilterClick = (genre) => {
+    setFilterByGenre(genre)
+  }
+
+  if (!show) {
+    return null
+  }
 
   return (
     <>
@@ -20,19 +34,38 @@ const Books = ({ show }) => {
                 <th>author</th>
                 <th>published</th>
               </tr>
-              {books.map((a) => (
-                <tr key={a.title}>
-                  <td>{a.title}</td>
-                  <td>{a.author.name}</td>
-                  <td>{a.published}</td>
-                </tr>
-              ))}
+              {books.map(
+                (a) =>
+                  isBookGenresAllowed(a) && (
+                    <tr key={a.title}>
+                      <td>{a.title}</td>
+                      <td>{a.author.name}</td>
+                      <td>{a.published}</td>
+                    </tr>
+                  )
+              )}
             </tbody>
           </table>
+          <div>
+            {booksByGenres.map((b) => (
+              <button key={`genre-${b}`} onClick={() => onGenreFilterClick(b)}>
+                {b}
+              </button>
+            ))}
+            <button
+              key={'reset-filter'}
+              onClick={() => onGenreFilterClick('ALL')}>
+              reset
+            </button>
+          </div>
         </div>
       )}
     </>
   )
+}
+
+const getAllBooksGenres = (allBooks) => {
+  return [...new Set(allBooks.map((b) => b.genres).flat())]
 }
 
 export default Books
