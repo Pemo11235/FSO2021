@@ -66,7 +66,7 @@ const Books = ({ show }) => {
 }
 
 const getAllBooksGenres = (allBooks) => {
-  return [...new Set(allBooks.map((b) => b.genres).flat())]
+  return [...new Set(allBooks?.map((b) => b.genres).flat())]
 }
 
 export default Books

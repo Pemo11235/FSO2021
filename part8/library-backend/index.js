@@ -107,7 +107,7 @@ const resolvers = {
     born: (root) => root.born,
     id: (root) => root.id,
     bookCount: async (root) => {
-      const books = await Books.find({ name: root.name }).populate('author')
+      const books = await Books.find({ author: root }).populate('author')
       return books.length
     },
   },
