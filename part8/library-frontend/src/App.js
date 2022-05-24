@@ -6,18 +6,11 @@ import Login from './components/Login'
 import NewAuthor from './components/NewAuthor'
 import NewBook from './components/NewBook'
 import Recommend from './components/Recommend'
-import { BOOK_ADDED } from './queries'
+import { ALL_BOOKS, BOOK_ADDED } from './queries'
 const App = () => {
   const [page, setPage] = useState('authors')
   const [token, setToken] = useState(null)
   const client = useApolloClient()
-
-  useSubscription(BOOK_ADDED, {
-    onSubscriptionData: ({ subscriptionData }) => {
-      console.log(subscriptionData)
-      alert('A new books is added !')
-    },
-  })
 
   const handleLogout = () => {
     setToken(null)
@@ -60,6 +53,20 @@ const App = () => {
       )}
     </div>
   )
+}
+export const updateCache = (cache, query, bookAdded) => {
+  const uniqByName = (a) => {
+    let seen = new Set()
+    return a.filter((item) => {
+      let k = item.title
+      return seen.has(k) ? false : seen.add(k)
+    })
+  }
+  cache.updateQuery(query, ({ allBooks }) => {
+    return {
+      allBooks: uniqByName(allBooks.concat(bookAdded)),
+    }
+  })
 }
 
 export default App

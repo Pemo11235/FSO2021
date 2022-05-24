@@ -1,14 +1,22 @@
-import { useQuery } from '@apollo/client'
+import { useApolloClient, useQuery, useSubscription } from '@apollo/client'
 import { useState } from 'react'
-import { ALL_BOOKS, GET_ALL_BOOKS_GENRES } from '../queries'
+import { updateCache } from '../App'
+import { ALL_BOOKS, BOOK_ADDED, GET_ALL_BOOKS_GENRES } from '../queries'
 
 const Books = ({ show }) => {
   const { data, loading } = useQuery(ALL_BOOKS)
   const [filterByGenre, setFilterByGenre] = useState('ALL')
   const { data: dataGenres } = useQuery(GET_ALL_BOOKS_GENRES)
-
+  const client = useApolloClient()
   const books = data?.allBooks
   const booksByGenres = books && getAllBooksGenres(dataGenres?.allBooks)
+
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      const { bookAdded } = subscriptionData.data
+      updateCache(client.cache, { query: ALL_BOOKS }, bookAdded)
+    },
+  })
 
   const isBookGenresAllowed = (book) => {
     if (filterByGenre === 'ALL') return true
