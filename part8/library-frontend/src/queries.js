@@ -47,10 +47,14 @@ export const ADD_BOOK = gql`
       author: $author
       genres: $genres
     ) {
-      ...BookDetails
+      title
+      published
+      author {
+        name
+      }
+     genres
     }
   }
-  ${BOOK_DETAILS}
 `
 export const EDIT_AUTHOR = gql`
   mutation changeBirthYear($name: String!, $setBornTo: Int!) {

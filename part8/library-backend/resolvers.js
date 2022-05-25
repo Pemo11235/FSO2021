@@ -7,6 +7,7 @@ const User = require('./models/User')
 const jwt = require('jsonwebtoken')
 
 const { PubSub } = require('graphql-subscriptions')
+const { default: mongoose } = require('mongoose')
 const pubsub = new PubSub()
 
 const JWT_SECRET = 'dummykey'
@@ -40,50 +41,61 @@ const resolvers = {
         return books
       }
     },
-    allAuthors: async () => Author.find({}),
+    allAuthors: async () => {
+      const authors = await Author.find({})
+
+      const authorsObject = authors.map((author) => {
+        return {
+          name: author.name,
+          born: author.born,
+          bookCount: author.books.length,
+          id: author.id,
+        }
+      })
+
+      return authorsObject
+    },
     me: async (root, args, context) => {
       return context.currentUser
     },
   },
-  Author: {
-    name: (root) => root.name,
-    born: (root) => root.born,
-    id: (root) => root.id,
-    bookCount: async (root) => {
-      const books = await Book.find({ author: root }).populate('author')
-      return books.length
-    },
-  },
   Mutation: {
     addBook: async (root, args, context) => {
-      const authorExist = await Author.findOne({ name: args.author })
-      const currentUser = context.currentUser
-      let newAuthor
-
-      if (!currentUser) {
-        throw new AuthenticationError('not authenticated')
-      }
-      if (!authorExist) {
-        newAuthor = new Author({ name: args.author, born: null })
-        if (newAuthor.name.length < 4) {
-          throw new UserInputError('Author name too short ! Min 4 ')
-        }
-        await newAuthor.save()
-      }
-      const book = new Book({
-        ...args,
-        author: authorExist ? authorExist : newAuthor,
-      })
-
-      if (book.title.length < 2) {
-        throw new UserInputError('Book title too short ! Min 2')
-      }
+      let book
       try {
-        await book.save()
+        let author = await Author.findOne({ name: args.author })
+        const currentUser = context.currentUser
+
+        if (!currentUser) {
+          throw new AuthenticationError('Not authenticated !')
+        }
+
+        if (author) {
+          book = new Book({ ...args, author: author._id })
+          author.books = author.books.concat(book._id)
+
+          await book.save()
+          await author.save()
+        }
+
+        if (!author) {
+          const _id = mongoose.Types.ObjectId()
+          book = new Book({ ...args, author: _id })
+
+          author = new Author({
+            name: args.author,
+            born: null,
+            bookCount: 1,
+            _id,
+            books: [book._id],
+          })
+
+          await author.save()
+          await book.save()
+        }
       } catch (e) {
         throw new UserInputError(e.message, { invalidArgs: args })
       }
-
       pubsub.publish('BOOK_ADDED', { bookAdded: book })
       return book
     },
