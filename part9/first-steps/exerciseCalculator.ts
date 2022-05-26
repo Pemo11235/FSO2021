@@ -94,4 +94,6 @@ const camelCaseToSentenceCase = (str: string): string => {
     return str.toUpperCase()
   })
 }
-execute()
+// execute()
+
+export default calculateExercises

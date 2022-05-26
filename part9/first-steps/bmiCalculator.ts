@@ -1,4 +1,4 @@
-import parseNumberArgs from './utils/parseArgs'
+// import parseNumberArgs from './utils/parseArgs'
 interface BmiValues {
   height: number
   weight: number
@@ -33,21 +33,23 @@ const calculateBmi = ({ height, weight }: BmiValues): BmiResults => {
 
 const cmToMeters = (cm: number): number => cm / 100
 
-const execute = (): void => {
-  try {
-    const { value1: height, value2: weight } = parseNumberArgs(process.argv, 2)
-    const results: BmiResults = calculateBmi({
-      height,
-      weight,
-    })
-    console.log(
-      `\nBMI for height ${height} cm and weight ${weight} kg: \t ${results}\n`
-    )
-  } catch (error: unknown) {
-    let errorMessage = '\nSomething went wrong !'
-    if (error instanceof Error) errorMessage += `\nError:  ${error.message}\n`
-    console.error(errorMessage)
-  }
-}
+// const execute = (): void => {
+//   try {
+//     const { value1: height, value2: weight } = parseNumberArgs(process.argv, 2)
+//     const results: BmiResults = calculateBmi({
+//       height,
+//       weight,
+//     })
+//     console.log(
+//       `\nBMI for height ${height} cm and weight ${weight} kg: \t ${results}\n`
+//     )
+//   } catch (error: unknown) {
+//     let errorMessage = '\nSomething went wrong !'
+//     if (error instanceof Error) errorMessage += `\nError:  ${error.message}\n`
+//     console.error(errorMessage)
+//   }
+// }
 
-execute()
+// execute()
+
+export default calculateBmi
