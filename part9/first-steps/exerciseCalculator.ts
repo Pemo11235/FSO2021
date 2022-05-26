@@ -20,8 +20,6 @@ const ratings: Ratings = {
   3: 'Excellent',
 }
 
-const weeklyExercise: Array<number> = [3, 0, 2, 4.5, 0, 3, 1]
-
 const calculateExercises = (
   exerciseHours: Array<number>,
   target: number
@@ -66,7 +64,7 @@ const printResults = (exerciseResult: ExerciseResult): void => {
   const title: string = `\nYour exercise results:\n`
   let content: string = ''
   for (const [key, value] of Object.entries(exerciseResult)) {
-    content += `\t${[`${camelCaseToSentenceCase(key)}`]}: ${value}\n`
+    content += `\t${[camelCaseToSentenceCase(key)]}: ${value}\n`
   }
   console.log(title + content)
 }
@@ -91,7 +89,6 @@ const execute = (): void => {
     console.error(errorMessage)
   }
 }
-//function that transform camel case to sentence case
 const camelCaseToSentenceCase = (str: string): string => {
   return str.replace(/([A-Z])/g, ' $1').replace(/^./, function (str) {
     return str.toUpperCase()
