@@ -13,7 +13,7 @@ type BmiResults =
 
 const calculateBmi = (height: number, weight: number): BmiResults => {
   const heightInMeters = cmToMeters(height)
-
+ 
   const bmi: number = weight / heightInMeters ** 2
 
   if (bmi < 16.0) return 'Underweight (Severe thinness)'
