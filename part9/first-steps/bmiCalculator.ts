@@ -1,5 +1,8 @@
-const cmToMeters = (cm: number): number => cm / 100
-
+import parseNumberArgs from './utils/parseArgs'
+interface BmiValues {
+  height: number
+  weight: number
+}
 type BmiResults =
   | 'Underweight (Severe thinness)'
   | 'Underweight (Moderate thinness)'
@@ -11,9 +14,9 @@ type BmiResults =
   | 'Obese (Class III)'
   | 'Error !'
 
-const calculateBmi = (height: number, weight: number): BmiResults => {
+const calculateBmi = ({ height, weight }: BmiValues): BmiResults => {
   const heightInMeters = cmToMeters(height)
- 
+
   const bmi: number = weight / heightInMeters ** 2
 
   if (bmi < 16.0) return 'Underweight (Severe thinness)'
@@ -28,4 +31,23 @@ const calculateBmi = (height: number, weight: number): BmiResults => {
   return 'Error !'
 }
 
-console.log(calculateBmi(180, 74))
+const cmToMeters = (cm: number): number => cm / 100
+
+const execute = (): void => {
+  try {
+    const { value1: height, value2: weight } = parseNumberArgs(process.argv, 2)
+    const results: BmiResults = calculateBmi({
+      height,
+      weight,
+    })
+    console.log(
+      `\nBMI for height ${height} cm and weight ${weight} kg: \t ${results}\n`
+    )
+  } catch (error: unknown) {
+    let errorMessage = '\nSomething went wrong !'
+    if (error instanceof Error) errorMessage += `\nError:  ${error.message}\n`
+    console.error(errorMessage)
+  }
+}
+
+execute()
