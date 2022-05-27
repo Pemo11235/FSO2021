@@ -1,9 +1,11 @@
 import express from "express";
+import cors from "cors";
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
-const PORT = 3003;
+const PORT = 3001;
 const baseUrl = `/api`;
 
 app.get(`${baseUrl}/ping`, (_req, res) => {
