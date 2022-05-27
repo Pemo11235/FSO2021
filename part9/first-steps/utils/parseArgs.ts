@@ -4,8 +4,8 @@ interface NumberArgs {
 
 const parseNumberArgs = (
   args: string[],
-  argsAccepted: number = 2,
-  argsMin: number = 2
+  argsAccepted = 2,
+  argsMin = 2
 ): NumberArgs => {
   const argsMax = argsAccepted + 2
   if (args.length < argsMax || args.length <= argsMin)

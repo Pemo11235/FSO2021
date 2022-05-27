@@ -1,4 +1,4 @@
-import parseNumberArgs from './utils/parseArgs'
+// import parseNumberArgs from './utils/parseArgs'
 interface ExerciseResult {
   periodLength: number
   trainingDays: number
@@ -60,40 +60,40 @@ const getAverageExerciseHours = (exerciseHours: Array<number>): number => {
   return sum / exerciseHours.length
 }
 
-const printResults = (exerciseResult: ExerciseResult): void => {
-  const title: string = `\nYour exercise results:\n`
-  let content: string = ''
-  for (const [key, value] of Object.entries(exerciseResult)) {
-    content += `\t${[camelCaseToSentenceCase(key)]}: ${value}\n`
-  }
-  console.log(title + content)
-}
-const execute = (): void => {
-  try {
-    const argsAccepted = process.argv.length - 2
-    const minArgs = 2
-    const exerciseHoursObj = parseNumberArgs(
-      process.argv,
-      argsAccepted,
-      minArgs
-    )
-    const target = Number(exerciseHoursObj.value1)
-    delete exerciseHoursObj.value1
+// const printResults = (exerciseResult: ExerciseResult): void => {
+//   const title = `\nYour exercise results:\n`
+//   let content = ''
+//   for (const [key, value] of Object.entries(exerciseResult)) {
+//     content += `\t${[camelCaseToSentenceCase(key)]}: ${value}\n`
+//   }
+//   console.log(title + content)
+// }
+// const execute = (): void => {
+//   try {
+//     const argsAccepted = process.argv.length - 2
+//     const minArgs = 2
+//     const exerciseHoursObj = parseNumberArgs(
+//       process.argv,
+//       argsAccepted,
+//       minArgs
+//     )
+//     const target = Number(exerciseHoursObj.value1)
+//     delete exerciseHoursObj.value1
 
-    const exerciseHoursArray = Array.from(Object.values(exerciseHoursObj))
-    const exerciseResult = calculateExercises(exerciseHoursArray, target)
-    printResults(exerciseResult)
-  } catch (error) {
-    let errorMessage = '\nSomething went wrong !'
-    if (error instanceof Error) errorMessage += `\nError:  ${error.message}\n`
-    console.error(errorMessage)
-  }
-}
-const camelCaseToSentenceCase = (str: string): string => {
-  return str.replace(/([A-Z])/g, ' $1').replace(/^./, function (str) {
-    return str.toUpperCase()
-  })
-}
+//     const exerciseHoursArray = Array.from(Object.values(exerciseHoursObj))
+//     const exerciseResult = calculateExercises(exerciseHoursArray, target)
+//     printResults(exerciseResult)
+//   } catch (error) {
+//     let errorMessage = '\nerrorSomething went wrong !'
+//     if (error instanceof Error) errorMessage += `\nError:  ${error.message}\n`
+//     console.error(errorMessage)
+//   }
+// }
+// const camelCaseToSentenceCase = (str: string): string => {
+// return str.replace(/([A-Z])/g, ' $1').replace(/^./, function (str) {
+// return str.toUpperCase()
+// })
+// }
 // execute()
 
 export default calculateExercises
