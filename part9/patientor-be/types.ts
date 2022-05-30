@@ -1,3 +1,11 @@
+/* eslint-disable no-unused-vars */
+// eslint-disable-next-line no-shadow
+export enum Gender {
+  Male = "male",
+  Female = "female",
+  Other = "other",
+}
+
 export interface DiagnoseEntry {
   code: string;
   name: string;
@@ -9,8 +17,10 @@ export interface PatientEntry {
   name: string;
   dateOfBirth: string;
   ssn: string;
-  gender: string;
+  gender: Gender;
   occupation: string;
 }
 
 export type NonSensitivePatientEntry = Omit<PatientEntry, "ssn">;
+
+export type NewPatientEntry = Omit<PatientEntry, "id">;

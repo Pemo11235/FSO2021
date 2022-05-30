@@ -5,11 +5,10 @@ const router = express.Router();
 
 router.get("/", (_req, res) => {
   const diagnoses = diagnosesService.getEntries();
-  const diagnosesToJson = JSON.stringify(diagnoses);
   if (diagnoses === undefined) {
     res.status(404).send("Not found");
   } else {
-    res.status(200).send(diagnosesToJson);
+    res.status(200).json(diagnoses);
   }
 });
 
