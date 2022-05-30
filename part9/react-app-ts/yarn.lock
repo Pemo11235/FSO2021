@@ -2709,7 +2709,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:^18.0.0":
+"@types/react-dom@npm:^18.0.0, @types/react-dom@npm:^18.0.5":
   version: 18.0.5
   resolution: "@types/react-dom@npm:18.0.5"
   dependencies:
@@ -2718,7 +2718,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:^18.0.0":
+"@types/react@npm:*, @types/react@npm:^18.0.9":
   version: 18.0.9
   resolution: "@types/react@npm:18.0.9"
   dependencies:
@@ -2837,7 +2837,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/eslint-plugin@npm:^5.5.0":
+"@typescript-eslint/eslint-plugin@npm:^5.26.0, @typescript-eslint/eslint-plugin@npm:^5.5.0":
   version: 5.26.0
   resolution: "@typescript-eslint/eslint-plugin@npm:5.26.0"
   dependencies:
@@ -2871,7 +2871,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:^5.5.0":
+"@typescript-eslint/parser@npm:^5.26.0, @typescript-eslint/parser@npm:^5.5.0":
   version: 5.26.0
   resolution: "@typescript-eslint/parser@npm:5.26.0"
   dependencies:
@@ -5523,7 +5523,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react@npm:^7.27.1":
+"eslint-plugin-react@npm:^7.27.1, eslint-plugin-react@npm:^7.30.0":
   version: 7.30.0
   resolution: "eslint-plugin-react@npm:7.30.0"
   dependencies:
@@ -10086,9 +10086,12 @@ __metadata:
     "@testing-library/user-event": ^13.2.1
     "@types/jest": ^27.0.1
     "@types/node": ^16.7.13
-    "@types/react": ^18.0.0
-    "@types/react-dom": ^18.0.0
+    "@types/react": ^18.0.9
+    "@types/react-dom": ^18.0.5
+    "@typescript-eslint/eslint-plugin": ^5.26.0
+    "@typescript-eslint/parser": ^5.26.0
     eslint: ^8.16.0
+    eslint-plugin-react: ^7.30.0
     react: ^18.1.0
     react-dom: ^18.1.0
     react-scripts: 5.0.1

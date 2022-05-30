@@ -1,3 +1,33 @@
+interface CoursePart {
+  name: string
+  exerciseCount: number
+}
+
+const Header = ({ courseName }: { courseName: string }): JSX.Element => (
+  <h1>{courseName}</h1>
+)
+const Paragraph = ({ name, exerciseCount }: CoursePart): JSX.Element => (
+  <p>
+    {name} {exerciseCount}
+  </p>
+)
+
+const Content = ({
+  courseParts,
+}: {
+  courseParts: CoursePart[]
+}): JSX.Element => (
+  <>
+    {courseParts.map(({ name, exerciseCount }) => (
+      <Paragraph name={name} exerciseCount={exerciseCount} key={name} />
+    ))}
+  </>
+)
+
+const Total = ({ total }: { total: number }): JSX.Element => (
+  <p>Number of exercises {total}</p>
+)
+
 const App = () => {
   const courseName = 'Half Stack application development'
   const courseParts = [
@@ -14,23 +44,16 @@ const App = () => {
       exerciseCount: 14,
     },
   ]
+  const totalExercises = courseParts.reduce(
+    (carry, part) => carry + part.exerciseCount,
+    0
+  )
 
   return (
     <div>
-      <h1>{courseName}</h1>
-      <p>
-        {courseParts[0].name} {courseParts[0].exerciseCount}
-      </p>
-      <p>
-        {courseParts[1].name} {courseParts[1].exerciseCount}
-      </p>
-      <p>
-        {courseParts[2].name} {courseParts[2].exerciseCount}
-      </p>
-      <p>
-        Number of exercises{' '}
-        {courseParts.reduce((carry, part) => carry + part.exerciseCount, 0)}
-      </p>
+      <Header courseName={courseName} />
+      <Content courseParts={courseParts} />
+      <Total total={totalExercises} />
     </div>
   )
 }
