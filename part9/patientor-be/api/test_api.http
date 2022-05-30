@@ -1,3 +1,9 @@
-GET http://localhost:3003/api/ping
+GET http://localhost:3001/api/ping
 
 ################################################################################
+
+GET http://localhost:3001/api/diagnoses
+
+################################################################################
+
+POST http://localhost:3001/api/diagnoses
