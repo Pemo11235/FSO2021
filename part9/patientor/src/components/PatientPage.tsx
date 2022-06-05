@@ -1,6 +1,6 @@
 import { Gender, Patient } from '../types'
 import { useParams } from 'react-router-dom'
-import { useStateValue } from '../state'
+import { updatePatient, useStateValue } from '../state'
 import { Container, Typography } from '@material-ui/core'
 import { useEffect } from 'react'
 import axios from 'axios'
@@ -42,7 +42,7 @@ const PatientPage = () => {
           const { data: patientFetched } = await axios.get<Patient>(
             `${apiBaseUrl}/patients/${id}`
           )
-          dispatch({ type: 'UPDATE_PATIENT', payload: patientFetched })
+          dispatch(updatePatient(patientFetched))
           localStorage.setItem(
             `patient-${patientFetched.id}`,
             JSON.stringify(patientFetched)
