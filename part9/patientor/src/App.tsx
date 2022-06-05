@@ -12,7 +12,7 @@ import PatientPage from './components/PatientPage'
 import { Typography } from '@material-ui/core'
 
 const App = () => {
-  const [, dispatch] = useStateValue()
+  const [{ patients }, dispatch] = useStateValue()
   React.useEffect(() => {
     void axios.get<void>(`${apiBaseUrl}/ping`)
 
@@ -29,6 +29,7 @@ const App = () => {
     void fetchPatientList()
   }, [dispatch])
 
+  console.log('App.tsx', patients)
   return (
     <div className='App'>
       <Router>

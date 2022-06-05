@@ -1,5 +1,6 @@
 import { State } from "./state";
 import { Patient } from "../types";
+import { updatePatientState } from '../utils/updatePatientState'
 
 export type Action =
   | {
@@ -22,7 +23,10 @@ export const reducer = (state: State, action: Action): State => {
         ...state,
         patients: {
           ...action.payload.reduce(
-            (memo, patient) => ({ ...memo, [patient.id]: patient }),
+            (memo, patient) => ({
+              ...memo,
+              [patient.id]: { ...state.patients[patient.id], ...patient },
+            }),
             {}
           ),
           ...state.patients,
@@ -37,20 +41,16 @@ export const reducer = (state: State, action: Action): State => {
         },
       }
     case 'UPDATE_PATIENT':
-      const toUpdate = state.patients[action.payload.id]
-      toUpdate.name = action.payload.name
-      toUpdate.occupation = action.payload.occupation
-      toUpdate.ssn = action.payload.ssn
-      toUpdate.gender = action.payload.gender
-      toUpdate.dateOfBirth = action.payload.dateOfBirth
-
-      delete state.patients[action.payload.id]
+      const updatedContent = action.payload
 
       return {
         ...state,
         patients: {
           ...state.patients,
-          [action.payload.id]: toUpdate,
+          [updatedContent.id]: updatePatientState(
+            updatedContent,
+            state.patients[updatedContent.id]
+          ),
         },
       }
 

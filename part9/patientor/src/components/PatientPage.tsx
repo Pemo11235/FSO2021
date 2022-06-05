@@ -5,6 +5,7 @@ import { Container, Typography } from '@material-ui/core'
 import { useEffect } from 'react'
 import axios from 'axios'
 import { apiBaseUrl } from '../constants'
+import { getPatientInLocalStorage } from '../utils/getPatientInLocalStorage'
 
 type SignsObjectShape = {
   [k in Gender]: string
@@ -18,19 +19,39 @@ const Signs: SignsObjectShape = {
 const PatientPage = () => {
   const { id } = useParams<{ id: string }>()
   const [{ patients }, dispatch] = useStateValue()
-  const patient: Patient = Object.values(patients)
-    .filter((p) => p.id === id)
-    .flat()[0]
 
+  console.log(Object.values(patients))
+
+  const localPatient = getPatientInLocalStorage(id)
+  let patient: Patient =
+    localPatient ??
+    Object.values(patients)
+      .filter((p) => p.id === id)
+      .flat()[0]
+
+  console.warn('Using local patient for ID:', id)
+
+  if (!id) {
+    return null
+  }
   useEffect(() => {
     const fetchPatient = async () => {
-      try {
-        const { data: patient } = await axios.get<Patient>(
-          `${apiBaseUrl}/patients/${id}`
-        )
-        dispatch({ type: 'UPDATE_PATIENT', payload: patient })
-      } catch (e) {
-        console.error(e)
+      if (!localPatient) {
+        console.warn('Fetching patient for ID:', id)
+        try {
+          const { data: patientFetched } = await axios.get<Patient>(
+            `${apiBaseUrl}/patients/${id}`
+          )
+          dispatch({ type: 'UPDATE_PATIENT', payload: patientFetched })
+          localStorage.setItem(
+            `patient-${patientFetched.id}`,
+            JSON.stringify(patientFetched)
+          )
+          console.log('Patient fetched:', patientFetched)
+          patient = JSON.parse(JSON.stringify(patientFetched)) as Patient
+        } catch (e) {
+          console.error(e)
+        }
       }
     }
     void fetchPatient()
