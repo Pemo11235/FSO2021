@@ -1,22 +1,42 @@
-import { BaseEntry } from '../types'
+import React from 'react'
+import { BaseEntry, Diagnosis } from '../types'
 
-const Entry = ({ entry }: { entry: BaseEntry }) => {
+const Entry = ({
+  entry,
+  diagnoses,
+}: {
+  entry: BaseEntry
+  diagnoses: Diagnosis[]
+}) => {
+  const diagnosisNames = React.useMemo(() => {
+    const names = []
+    for (const { code, name } of diagnoses) {
+      if (entry.diagnosisCodes?.includes(code)) {
+        names.push(`${name} (${code})`)
+      }
+    }
+    return names
+  }, [entry, diagnoses])
+
   return (
-    <div>
+    entry &&
+    diagnoses && (
       <div>
-        <b>{entry.date}</b>
+        <div>
+          <b>{entry.date}</b>
+          <br />
+          {entry.description}
+        </div>
         <br />
-        {entry.description}
+        <div>
+          <ul>
+            {diagnosisNames?.map((str) => (
+              <li key={str}>{str}</li>
+            ))}
+          </ul>
+        </div>
       </div>
-      <br />
-      <div>
-        <ul>
-          {entry.diagnosisCodes?.map((code) => (
-            <li key={code}>{code}</li>
-          ))}
-        </ul>
-      </div>
-    </div>
+    )
   )
 }
 

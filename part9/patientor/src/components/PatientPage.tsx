@@ -19,9 +19,7 @@ const Signs: SignsObjectShape = {
 }
 const PatientPage = () => {
   const { id } = useParams<{ id: string }>()
-  const [{ patients }, dispatch] = useStateValue()
-
-  console.log(Object.values(patients))
+  const [{ patients, diagnoses }, dispatch] = useStateValue()
 
   const localPatient = getPatientInLocalStorage(id)
   let patient: Patient =
@@ -30,7 +28,7 @@ const PatientPage = () => {
       .filter((p) => p.id === id)
       .flat()[0]
 
-  console.warn('Using local patient for ID:', id)
+  console.warn('Using local patient:', patient)
 
   if (!id) {
     return null
@@ -76,7 +74,11 @@ const PatientPage = () => {
           </div>
           <Typography variant='h5'>Entries:</Typography>
           {patient.entries.map((entry) => (
-            <Entry key={entry.id} entry={entry} />
+            <Entry
+              key={entry.id}
+              entry={entry}
+              diagnoses={Object.values(diagnoses)}
+            />
           ))}
         </Container>
       )}
