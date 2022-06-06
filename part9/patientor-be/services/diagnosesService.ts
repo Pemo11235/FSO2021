@@ -7,6 +7,7 @@ const getEntries = (): DiagnoseEntry[] => {
 
 const addDiagnoses = (diagnose: DiagnoseEntry) => {
   diagnosesData.push(diagnose);
+  return diagnose;
 };
 
 export default { getEntries, addDiagnoses };

@@ -7,6 +7,13 @@ GET http://localhost:3001/api/diagnoses
 ################################################################################
 
 POST http://localhost:3001/api/diagnoses
+Content-Type: application/json
+
+{
+  "code" : "A000",
+  "name" : "Acute Bronchitis",
+  "latin" : "Acute Bronchitis"
+}
 
 ################################################################################
 GET http://localhost:3001/api/patients

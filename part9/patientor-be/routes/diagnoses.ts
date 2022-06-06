@@ -1,5 +1,6 @@
 import express from "express";
 import diagnosesService from "../services/diagnosesService";
+import { DiagnoseEntry } from "../types";
 
 const router = express.Router();
 
@@ -12,8 +13,18 @@ router.get("/", (_req, res) => {
   }
 });
 
-router.post("/", (_req, res) => {
-  res.send("Add a new diagnosis");
+router.post("/", (req, res) => {
+  try {
+    const diagnoseEntry = req.body as DiagnoseEntry;
+    const diagnose = diagnosesService.addDiagnoses(diagnoseEntry);
+    res.json(diagnose);
+  } catch (e: unknown) {
+    let message = "Something went wrong";
+    if (e instanceof Error) {
+      message += `: ${e.message}`;
+    }
+    res.status(400).send(message);
+  }
 });
 
 export default router;
