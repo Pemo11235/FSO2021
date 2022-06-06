@@ -1,7 +1,7 @@
 import { Gender, Patient } from '../types'
 import { useParams } from 'react-router-dom'
 import { updatePatient, useStateValue } from '../state'
-import { Container, Typography } from '@material-ui/core'
+import { Button, Card, Container, Typography } from '@material-ui/core'
 import { useEffect } from 'react'
 import axios from 'axios'
 import { apiBaseUrl } from '../constants'
@@ -60,26 +60,56 @@ const PatientPage = () => {
     <div>
       {patient && (
         <Container style={{ margin: '30px 0' }}>
-          <Typography variant='h3'>
-            {patient.name}
-            {Signs[patient.gender]}
-          </Typography>
+          <Card style={{ padding: '5px 20px', border: '3px solid #303F9F' }}>
+            <Typography variant='h3'>
+              {patient.name}
+              {Signs[patient.gender]}
+            </Typography>
 
-          <div>
-            <b>ssn: </b>
-            {patient.ssn}
-          </div>
-          <div>
-            <b>occupation :</b> {patient.occupation}
-          </div>
-          <Typography variant='h5'>Entries:</Typography>
-          {patient.entries.map((entry) => (
-            <Entry
-              key={entry.id}
-              entry={entry}
-              diagnoses={Object.values(diagnoses)}
-            />
-          ))}
+            <div>
+              <Typography variant='body1'>
+                <b>SSN: </b>
+                {patient.ssn}
+              </Typography>
+            </div>
+            <div>
+              <Typography variant='body1'>
+                <b>OCCUPATION: </b>
+                {patient.occupation}
+              </Typography>
+            </div>
+          </Card>
+          <Card
+            style={{
+              margin: '30px 0',
+              padding: '10px',
+              background: '#303F9F',
+              color: 'white',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexDirection: 'column',
+            }}>
+            <Typography
+              variant='h4'
+              style={{
+                margin: '30px 0',
+                display: 'flex',
+                justifyContent: 'center',
+              }}>
+              ENTRIES
+            </Typography>
+            {patient.entries.map((entry) => (
+              <Entry
+                key={entry.id}
+                entry={entry}
+                diagnoses={Object.values(diagnoses)}
+              />
+            ))}
+          </Card>
+          <Button variant='contained' color='primary'>
+            Add Entry to {patient.name}
+          </Button>
         </Container>
       )}
     </div>
