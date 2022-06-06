@@ -6,6 +6,7 @@ import { useEffect } from 'react'
 import axios from 'axios'
 import { apiBaseUrl } from '../constants'
 import { getPatientInLocalStorage } from '../utils/getPatientInLocalStorage'
+import Entry from './Entry'
 
 type SignsObjectShape = {
   [k in Gender]: string
@@ -73,6 +74,10 @@ const PatientPage = () => {
           <div>
             <b>occupation :</b> {patient.occupation}
           </div>
+          <Typography variant='h5'>Entries:</Typography>
+          {patient.entries.map((entry) => (
+            <Entry key={entry.id} entry={entry} />
+          ))}
         </Container>
       )}
     </div>
