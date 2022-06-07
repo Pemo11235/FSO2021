@@ -3,6 +3,11 @@ import {
   NonSensitivePatientEntry,
   PatientEntry,
   NewPatientEntry,
+  Entry,
+  NewEntry,
+  HospitalEntry,
+  OccupationalHealthcareEntry,
+  HealthCheckEntry,
 } from "../types";
 import patientsData from "../data/patients";
 
@@ -37,4 +42,55 @@ const findById = (id: string): PatientEntry | undefined => {
   return patientFound;
 };
 
-export default { getEntries, getNonSensitiveEntries, addPatient, findById };
+const getPatientEntries = (id: string): Entry[] => {
+  const patientFound = findById(id);
+  if (patientFound) {
+    return patientFound.entries;
+  }
+  return [];
+};
+
+const addEntryToPatient = (id: string, entry: NewEntry): Entry | {} => {
+  const patientFound = findById(id);
+  const { date, description, specialist, type } = entry;
+  if (!date || !description || !specialist || !type) {
+    throw new Error("Missing entry information");
+  }
+  if (patientFound) {
+    const newEntry: Entry = {
+      id: uuid(),
+      ...entry,
+    };
+    switch (entry.type) {
+      case "Hospital":
+        patientFound.entries.push(newEntry as HospitalEntry);
+        return newEntry;
+      case "OccupationalHealthcare":
+        if (!entry.employerName) {
+          throw new Error("Missing employer name");
+        } else {
+          patientFound.entries.push(newEntry as OccupationalHealthcareEntry);
+          return newEntry;
+        }
+      case "HealthCheck":
+        if (!entry.healthCheckRating) {
+          throw new Error("Missing health check rating");
+        } else {
+          patientFound.entries.push(newEntry as HealthCheckEntry);
+          return newEntry;
+        }
+      default:
+        return {};
+    }
+  }
+  return {};
+};
+
+export default {
+  getEntries,
+  getNonSensitiveEntries,
+  addPatient,
+  findById,
+  getPatientEntries,
+  addEntryToPatient,
+};

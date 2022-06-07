@@ -1,6 +1,6 @@
 import express from "express";
 import patientsService from "../services/patientsService";
-import { NonSensitivePatientEntry } from "../types";
+import { NonSensitivePatientEntry, NewEntry } from "../types";
 import toNewPatientEntry from "../utils/patientsUtils";
 
 const router = express.Router();
@@ -21,6 +21,25 @@ router.get("/:id", (req, res) => {
     res.status(200).json(patient);
   } else {
     res.status(404).send("Not found");
+  }
+});
+router.get("/:id/entries", (req, res) => {
+  const entries = patientsService.getPatientEntries(req.params.id);
+  if (entries) {
+    res.status(200).json(entries);
+  } else {
+    res.status(404).send("Not found");
+  }
+});
+router.post("/:id/entries", (req, res) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const newEntry = req.body as NewEntry;
+  const { id } = req.params;
+  const entryInserted = patientsService.addEntryToPatient(id, newEntry);
+  if (entryInserted) {
+    res.status(200).json(entryInserted);
+  } else {
+    res.status(400).send("Not valid");
   }
 });
 
