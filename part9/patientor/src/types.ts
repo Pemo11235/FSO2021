@@ -1,13 +1,13 @@
 export interface Diagnosis {
-  code: string;
-  name: string;
-  latin?: string;
+  code: string
+  name: string
+  latin?: string
 }
 
 export enum Gender {
-  Male = "male",
-  Female = "female",
-  Other = "other"
+  Male = 'male',
+  Female = 'female',
+  Other = 'other',
 }
 
 export interface BaseEntry {
@@ -61,3 +61,8 @@ export type Entry =
   | HospitalEntry
   | OccupationalHealthcareEntry
   | HealthCheckEntry
+
+  export type UnionOmit<
+    T,
+    K extends string | number | symbol
+  > = T extends unknown ? Omit<T, K> : never

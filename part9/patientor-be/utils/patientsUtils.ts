@@ -59,6 +59,7 @@ type Fields = {
   ssn: unknown;
   gender: unknown;
   occupation: unknown;
+  entries: unknown;
 };
 
 const toNewPatientEntry = ({
@@ -67,6 +68,7 @@ const toNewPatientEntry = ({
   ssn,
   gender,
   occupation,
+  entries,
 }: Fields): NewPatientEntry => {
   return {
     name: parseName(name),
@@ -74,7 +76,7 @@ const toNewPatientEntry = ({
     ssn: parseSSN(ssn),
     gender: parseGender(gender),
     occupation: parseOccupation(occupation),
-    entries: [] as Entry[],
+    entries: entries as Entry[],
   };
 };
 

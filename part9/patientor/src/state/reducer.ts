@@ -1,5 +1,5 @@
 import { State } from "./state";
-import { Diagnosis, Patient } from '../types'
+import { Diagnosis, Patient, Entry } from '../types'
 import { updatePatientState } from '../utils/updatePatientState'
 
 export type Action =
@@ -19,6 +19,13 @@ export type Action =
       type: 'SET_DIAGNOSIS_CODES'
       payload: Diagnosis[]
     }
+  | {
+      type: 'ADD_ENTRY'
+      payload: {
+        patientId: string
+        entry: Entry
+      }
+    }
 
 export const setPatientList = (patientList: Patient[]): Action => {
   return {
@@ -32,6 +39,14 @@ export const addPatient = (patient: Patient): Action => {
     payload: patient,
   }
 }
+
+export const addEntry = (patientId: string, entry: Entry): Action => ({
+  type: 'ADD_ENTRY',
+  payload: {
+    patientId,
+    entry,
+  },
+})
 
 export const updatePatient = (patient: Patient): Action => {
   return {
@@ -78,10 +93,7 @@ export const reducer = (state: State, action: Action): State => {
         ...state,
         patients: {
           ...state.patients,
-          [updatedContent.id]: updatePatientState(
-            updatedContent,
-            state.patients[updatedContent.id]
-          ),
+          [updatedContent.id]: updatedContent,
         },
       }
     case 'SET_DIAGNOSIS_CODES':
@@ -96,6 +108,19 @@ export const reducer = (state: State, action: Action): State => {
             {}
           ),
           ...state.diagnoses,
+        },
+      }
+    case 'ADD_ENTRY':
+      const { patientId, entry } = action.payload
+      console.log('1', state.patients[patientId])
+      return {
+        ...state,
+        patients: {
+          ...state.patients,
+          [patientId]: {
+            ...state.patients[patientId],
+            entries: [...state.patients[patientId].entries, entry],
+          },
         },
       }
     default:

@@ -8,6 +8,7 @@ import {
   HospitalEntry,
   OccupationalHealthcareEntry,
   HealthCheckEntry,
+  HealthCheckRating,
 } from "../types";
 import patientsData from "../data/patients";
 
@@ -16,13 +17,16 @@ const getEntries = (): PatientEntry[] => {
 };
 
 const getNonSensitiveEntries = (): NonSensitivePatientEntry[] => {
-  return patientsData.map(({ id, name, dateOfBirth, gender, occupation }) => ({
-    id,
-    name,
-    dateOfBirth,
-    gender,
-    occupation,
-  }));
+  return patientsData.map(
+    ({ id, name, dateOfBirth, gender, occupation, entries }) => ({
+      id,
+      name,
+      dateOfBirth,
+      gender,
+      occupation,
+      entries,
+    })
+  );
 };
 
 const addPatient = (entry: NewPatientEntry): PatientEntry => {
@@ -73,7 +77,12 @@ const addEntryToPatient = (id: string, entry: NewEntry): Entry | {} => {
           return newEntry;
         }
       case "HealthCheck":
-        if (!entry.healthCheckRating) {
+        if (
+          entry.healthCheckRating !== HealthCheckRating.CriticalRisk &&
+          entry.healthCheckRating !== HealthCheckRating.HighRisk &&
+          entry.healthCheckRating !== HealthCheckRating.LowRisk &&
+          entry.healthCheckRating !== HealthCheckRating.Healthy
+        ) {
           throw new Error("Missing health check rating");
         } else {
           patientFound.entries.push(newEntry as HealthCheckEntry);
